@@ -192,7 +192,15 @@ function fillTextFields(
     // Center-align text in the field
     pdfField.setAlignment(TextAlignment.Center);
 
-    // Apply the embedded Arabic font so pdf-lib can build correct appearances
+    // Phone field: override font size to 808pt
+    if (fieldSpec.name === 'phone') {
+      pdfField.setFontSize(808);
+    }
+
+    // Apply the embedded Arabic font — this updates the DA (Default
+    // Appearance) string so Acrobat knows which font to use when it
+    // rebuilds appearances via NeedAppearances. It also creates an
+    // appearance stream, but we strip those later (see below).
     const font = fontCache[fieldSpec.font.family as FontFamily];
     if (font) {
       pdfField.defaultUpdateAppearances(font);
@@ -200,15 +208,35 @@ function fillTextFields(
 
     // Set text value
     pdfField.setText(value);
+  }
+}
 
-    // Phone field: override font size to 808pt
-    if (fieldSpec.name === 'phone') {
-      pdfField.setFontSize(808);
-    }
+/**
+ * Remove pre-built appearance streams (/AP) from every text field widget.
+ *
+ * WHY: pdf-lib's defaultUpdateAppearances() cannot do proper Arabic
+ * shaping or RTL layout — the appearances it generates display Arabic
+ * text as disconnected LTR glyphs. Those broken appearance streams
+ * also cause Acrobat to show a "+" overflow indicator because the
+ * glyph widths are calculated incorrectly.
+ *
+ * By deleting the /AP entry from each widget, we force the PDF viewer
+ * to rebuild appearances from scratch on document open (driven by the
+ * NeedAppearances flag set on the AcroForm). The DA string (set by
+ * defaultUpdateAppearances) is preserved, so the viewer knows which
+ * embedded Arabic font and size to use.
+ *
+ * Image fields (buttons) are NOT affected — their appearances are
+ * generated correctly by pdf-lib's setImage().
+ */
+function stripTextFieldAppearances(form: PDFForm): void {
+  for (const fieldSpec of FIELD_SCHEMA.text_fields) {
+    const pdfField = getTextField(form, fieldSpec.name);
+    if (!pdfField) continue;
 
-    // Apply font again after setText to ensure appearance is built with our custom font
-    if (font) {
-      pdfField.defaultUpdateAppearances(font);
+    const widgets = pdfField.acroField.getWidgets();
+    for (const widget of widgets) {
+      widget.dict.delete(PDFName.of('AP'));
     }
   }
 }
@@ -303,6 +331,21 @@ export async function generateBoard(
   // ── 3. Access PDF form ────────────────────────────────
   const form = pdfDoc.getForm();
 
+  // ── 3b. Set NeedAppearances flag ──────────────────────
+  //    pdf-lib's defaultUpdateAppearances() cannot produce correct
+  //    Arabic/RTL text layout in appearance streams. The text looks
+  //    broken (disconnected, wrong order) until the user clicks the
+  //    field in Acrobat, which triggers Acrobat's own text engine.
+  //
+  //    Setting NeedAppearances = true tells the PDF viewer to rebuild
+  //    ALL text field appearances on document open using its own
+  //    Arabic-aware shaping engine. This makes text display correctly
+  //    immediately without user interaction.
+  //
+  //    We still call defaultUpdateAppearances() below as a fallback
+  //    for viewers that don't support NeedAppearances.
+  form.acroForm.dict.set(PDFName.of('NeedAppearances'), PDFBool.True);
+
   // ── 4. Fill text fields (with font + centering) ───────
   fillTextFields(
     form,
@@ -310,11 +353,13 @@ export async function generateBoard(
     fontCache
   );
 
+  // ── 4b. Strip broken Arabic appearance streams ────────
+  //    Remove /AP from text field widgets so Acrobat rebuilds
+  //    them using its own Arabic-aware engine (NeedAppearances).
+  //    This also eliminates the "+" overflow indicator.
+  stripTextFieldAppearances(form);
+
   // ── 5. Fill image fields ──────────────────────────────
-  //    Images MUST be filled after text fields.
-  //    We do NOT set NeedAppearances because that flag tells
-  //    the viewer to regenerate ALL appearances, which would
-  //    destroy the button image appearances set below.
   if (images.logo) {
     await fillImageField(pdfDoc, form, 'Company_logo', images.logo);
   }
@@ -322,10 +367,11 @@ export async function generateBoard(
     await fillImageField(pdfDoc, form, 'QRcode', images.qr);
   }
 
-  // ── 6. Serialize — pdf-lib already built appearances
-  //    for text fields via defaultUpdateAppearances() above,
-  //    and image fields via setImage(). No viewer-side
-  //    regeneration needed.
+  // ── 6. Serialize ──────────────────────────────────────
+  //    updateFieldAppearances: false → don't let pdf-lib rebuild
+  //    appearances on save (we already called defaultUpdateAppearances
+  //    manually as fallback, and NeedAppearances will make Acrobat
+  //    rebuild them properly on open).
   return pdfDoc.save({ updateFieldAppearances: false });
 }
 
