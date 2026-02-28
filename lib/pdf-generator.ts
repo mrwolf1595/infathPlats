@@ -1,4 +1,4 @@
-import { PDFDocument, PDFFont, PDFForm, PDFTextField, PDFButton, PDFName, TextAlignment } from 'pdf-lib';
+import { PDFDocument, PDFFont, PDFForm, PDFTextField, PDFButton, PDFPage, PDFImage, PDFName, PDFBool, TextAlignment } from 'pdf-lib';
 import fontkit from '@pdf-lib/fontkit';
 import {
   FIELD_SCHEMA,
@@ -241,37 +241,68 @@ function stripTextFieldAppearances(form: PDFForm): void {
   }
 }
 
-// ─── Image Field Filling ─────────────────────────────────────────────
+// ─── Image Drawing ───────────────────────────────────────────────────
 
 /**
- * Fill an image field (PDF button) with an embedded image.
+ * Draw an image directly on the PDF page (NOT as a form field).
  *
- * In PDF forms, image fields are represented as push-button fields.
- * We embed the image into the document and set it as the button icon.
+ * WHY NOT form buttons? Because NeedAppearances=true (required for
+ * Arabic text) causes the PDF viewer to regenerate ALL field
+ * appearances, destroying button images set via setImage(). By
+ * drawing images as static page content they are unaffected.
+ *
+ * We also remove the corresponding button field from the form so
+ * Acrobat doesn't show an empty interactive box on top.
  */
-async function fillImageField(
+async function drawImageOnPage(
   pdfDoc: PDFDocument,
+  page: PDFPage,
   form: PDFForm,
   fieldName: string,
   imageBase64: string
 ): Promise<void> {
   if (!imageBase64) return;
 
-  let button: PDFButton;
-  try {
-    button = form.getButton(fieldName);
-  } catch {
-    console.warn(`[pdf-generator] Button/image field "${fieldName}" not found in PDF form.`);
+  // Find the image field spec from the schema
+  const fieldSpec = FIELD_SCHEMA.image_fields.find(f => f.name === fieldName);
+  if (!fieldSpec) {
+    console.warn(`[pdf-generator] Image field "${fieldName}" not found in schema.`);
     return;
   }
 
+  // Embed the image
   const imageBytes = base64ToUint8Array(imageBase64);
-
   const image = isJpeg(imageBase64)
     ? await pdfDoc.embedJpg(imageBytes)
     : await pdfDoc.embedPng(imageBytes);
 
-  button.setImage(image);
+  // Get the button widget rectangle from the PDF form (most accurate position)
+  let x = fieldSpec.position.x;
+  let y = fieldSpec.position.y;
+  let width = fieldSpec.size.width_pt;
+  let height = fieldSpec.size.height_pt;
+
+  try {
+    const button = form.getButton(fieldName);
+    const widgets = button.acroField.getWidgets();
+    if (widgets.length > 0) {
+      const rect = widgets[0].getRectangle();
+      x = rect.x;
+      y = rect.y;
+      width = rect.width;
+      height = rect.height;
+    }
+    // Remove the button field so it doesn't show an empty box
+    form.removeField(button);
+  } catch {
+    // Button not found in form — use schema coordinates
+    // Convert from top-left origin to PDF bottom-left origin
+    const pageHeight = page.getHeight();
+    y = pageHeight - fieldSpec.position.y - fieldSpec.size.height_pt;
+  }
+
+  // Draw the image on the page as static content
+  page.drawImage(image, { x, y, width, height });
 }
 
 // ─── Main Entry Point ────────────────────────────────────────────────
@@ -330,6 +361,13 @@ export async function generateBoard(
 
   // ── 3. Access PDF form ────────────────────────────────
   const form = pdfDoc.getForm();
+  const page = pdfDoc.getPages()[0];
+
+  // ── 3b. Set NeedAppearances flag ──────────────────────
+  //    Tells Acrobat to rebuild text field appearances on open
+  //    using its own Arabic-aware shaping engine. Without this,
+  //    text fields with stripped /AP show blank in Acrobat.
+  form.acroForm.dict.set(PDFName.of('NeedAppearances'), PDFBool.True);
 
   // ── 4. Fill text fields (with font + centering) ───────
   fillTextFields(
@@ -339,37 +377,27 @@ export async function generateBoard(
   );
 
   // ── 4b. Strip broken Arabic appearance streams ────────
-  //    pdf-lib's defaultUpdateAppearances() cannot produce correct
-  //    Arabic/RTL text layout — it renders characters disconnected
-  //    and LTR, and miscalculates glyph widths causing the "+"
-  //    overflow indicator in Acrobat.
-  //
-  //    By deleting /AP from text field widgets, we force the PDF
-  //    viewer to generate fresh appearances using its own Arabic-
-  //    aware shaping engine. The DA (Default Appearance) string is
-  //    preserved, so the viewer knows which embedded font + size
-  //    to use.
-  //
-  //    We do NOT set NeedAppearances=true because that flag would
-  //    also cause the viewer to regenerate button/image field
-  //    appearances, destroying the images set via setImage().
+  //    Remove /AP from text field widgets so Acrobat rebuilds
+  //    them correctly via NeedAppearances.
   stripTextFieldAppearances(form);
 
-  // ── 5. Fill image fields ──────────────────────────────
-  //    Image fields (buttons) keep their /AP streams intact.
-  //    setImage() produces correct appearance streams that don't
-  //    need viewer-side regeneration.
+  // ── 5. Draw images directly on page ───────────────────
+  //    Images are drawn as static page content (not form fields)
+  //    so they are NOT affected by NeedAppearances regeneration.
+  //    The button fields are removed from the form to avoid
+  //    empty interactive boxes overlapping the images.
   if (images.logo) {
-    await fillImageField(pdfDoc, form, 'Company_logo', images.logo);
+    await drawImageOnPage(pdfDoc, page, form, 'Company_logo', images.logo);
   }
   if (images.qr) {
-    await fillImageField(pdfDoc, form, 'QRcode', images.qr);
+    await drawImageOnPage(pdfDoc, page, form, 'QRcode', images.qr);
   }
 
   // ── 6. Serialize ──────────────────────────────────────
   //    updateFieldAppearances: false → don't let pdf-lib rebuild
-  //    appearances on save. Text field /AP was stripped so the
-  //    viewer will build them. Image field /AP is intact.
+  //    appearances on save. Acrobat will rebuild text field
+  //    appearances on open via NeedAppearances. Images are
+  //    static page content and don't need regeneration.
   return pdfDoc.save({ updateFieldAppearances: false });
 }
 
