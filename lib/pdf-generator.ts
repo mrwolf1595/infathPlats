@@ -23,15 +23,26 @@ const FONT_PATHS: Record<string, string> = {
 
 /**
  * Load a file from /public as ArrayBuffer.
- * Uses Node fs in API routes, falls back to fetch otherwise.
+ * Uses Node fs in API routes, falls back to fetch with absolute URL otherwise.
+ *
+ * On Vercel, the public/ directory is NOT on the serverless function's
+ * filesystem by default. We rely on `outputFileTracingIncludes` in
+ * next.config.ts to bundle them. If that still fails we fetch from
+ * the deployment URL (VERCEL_URL / custom domain).
  */
 async function loadAssetBytes(publicPath: string): Promise<ArrayBuffer> {
-  // Node.js environment (API routes)
+  // 1. Try Node.js filesystem (works locally + on Vercel when files are traced)
   if (typeof process !== 'undefined') {
     try {
       const path = await import('path');
       const fs = await import('fs');
-      const filePath = path.join(process.cwd(), 'public', publicPath);
+      // Try standard public/ path first
+      let filePath = path.join(process.cwd(), 'public', publicPath);
+      if (!fs.existsSync(filePath)) {
+        // Vercel sometimes places traced files relative to .next/server
+        const altPath = path.join(process.cwd(), '.next', 'server', 'public', publicPath);
+        if (fs.existsSync(altPath)) filePath = altPath;
+      }
       const buffer = fs.readFileSync(filePath);
       return buffer.buffer.slice(
         buffer.byteOffset,
@@ -41,10 +52,24 @@ async function loadAssetBytes(publicPath: string): Promise<ArrayBuffer> {
       // Fall through to fetch
     }
   }
-  // Fetch fallback
-  const res = await fetch(publicPath);
+
+  // 2. Fetch fallback – build an absolute URL so it works in serverless
+  let baseUrl: string;
+  if (typeof window !== 'undefined') {
+    baseUrl = window.location.origin;
+  } else if (process.env.VERCEL_URL) {
+    // Vercel provides this automatically; it doesn't include the protocol
+    baseUrl = `https://${process.env.VERCEL_URL}`;
+  } else if (process.env.NEXT_PUBLIC_SITE_URL) {
+    baseUrl = process.env.NEXT_PUBLIC_SITE_URL;
+  } else {
+    baseUrl = 'http://localhost:3000';
+  }
+
+  const url = `${baseUrl}${publicPath.startsWith('/') ? '' : '/'}${encodeURI(publicPath)}`;
+  const res = await fetch(url);
   if (!res.ok) {
-    throw new Error(`Failed to load asset: ${publicPath} (${res.status})`);
+    throw new Error(`Failed to load asset: ${publicPath} (${res.status} from ${url})`);
   }
   return res.arrayBuffer();
 }
