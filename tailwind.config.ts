@@ -10,12 +10,13 @@ const config: Config = {
     extend: {
       colors: {
         nafeth: {
-          blue: '#151B44',    // dark_blue from schema (rgb 0.082, 0.105, 0.266)
+          blue: '#151B44',
           white: '#FFFFFF',
+          teal: '#0d9488',
         },
       },
       fontFamily: {
-        sans: ['var(--font-inter)', 'system-ui', 'sans-serif'],
+        sans: ['IBM Plex Sans Arabic', 'system-ui', 'sans-serif'],
       },
     },
   },

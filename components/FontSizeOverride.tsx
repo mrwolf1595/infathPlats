@@ -22,15 +22,25 @@ function getDefaultSize(fieldName: string): number {
 
 export function FontSizeOverride({ value, onChange }: FontSizeOverrideProps) {
   return (
-    <div className="card">
-      <h2 className="mb-4 text-lg font-semibold text-nafeth-blue">
-        تكبير الخط (اختياري)
-      </h2>
-      <p className="mb-4 text-sm text-gray-500">
-        يمكنك تغيير حجم الخط لهذه الحقول فقط (من 50 إلى 1000 نقطة)
-      </p>
+    <div className="card animate-in animate-in-delay-4">
+      <div className="section-title">
+        <div className="icon">🔤</div>
+        <div>
+          <span>تكبير الخط</span>
+          <p
+            style={{
+              fontSize: '0.75rem',
+              fontWeight: '400',
+              color: 'var(--text-muted)',
+              marginTop: '2px',
+            }}
+          >
+            يمكنك تغيير حجم الخط لهذه الحقول (من 50 إلى 1000 نقطة)
+          </p>
+        </div>
+      </div>
 
-      <div className="grid gap-4 sm:grid-cols-2">
+      <div className="form-grid-2">
         {ALLOWED_FONT_OVERRIDES.map((fieldName) => {
           const fieldMeta = FIELD_SCHEMA.text_fields.find(
             (f) => f.name === fieldName
@@ -38,11 +48,11 @@ export function FontSizeOverride({ value, onChange }: FontSizeOverrideProps) {
           const defaultSize = getDefaultSize(fieldName);
 
           return (
-            <div key={fieldName}>
+            <div key={fieldName} className="field-group">
               <label className="label-field">
                 {fieldMeta?.label_ar ?? fieldName}
               </label>
-              <div className="flex items-center gap-2">
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
                 <input
                   type="number"
                   min={50}
@@ -57,9 +67,13 @@ export function FontSizeOverride({ value, onChange }: FontSizeOverrideProps) {
                     });
                   }}
                   className="input-field"
+                  style={{ direction: 'ltr', textAlign: 'center' }}
                 />
-                <span className="text-xs text-gray-400 whitespace-nowrap">
-                  الافتراضي: {defaultSize}
+                <span
+                  className="field-badge"
+                  style={{ whiteSpace: 'nowrap', margin: 0 }}
+                >
+                  الافتراضي: {defaultSize}pt
                 </span>
               </div>
             </div>

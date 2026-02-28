@@ -5,6 +5,7 @@ import { TemplateSelector } from './TemplateSelector';
 import { FormFields } from './FormFields';
 import { FontSizeOverride } from './FontSizeOverride';
 import { ImageUploader } from './ImageUploader';
+import { FIELD_SCHEMA } from '@/lib/types';
 import { textFieldsSchema, fontOverrideSchema, imagesSchema } from '@/lib/validation';
 import type { BoardFormData, FontOverride, BoardImages } from '@/lib/types';
 
@@ -93,81 +94,112 @@ export function BoardForm() {
     }
   }
 
+  // Get image field specs from schema
+  const logoSpec = FIELD_SCHEMA.image_fields.find((f) => f.name === 'Company_logo');
+  const qrSpec = FIELD_SCHEMA.image_fields.find((f) => f.name === 'QRcode');
+
   // ── Render ─────────────────────────────────────────────────────────
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
+    <form
+      onSubmit={handleSubmit}
+      style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}
+    >
       {/* 1. Template selection */}
       <TemplateSelector value={templateId} onChange={setTemplateId} />
 
-      {/* 2. Text fields */}
+      {/* 2. Text fields (grouped) */}
       <FormFields values={formData} onChange={setFormData} errors={errors} />
 
       {/* 3. Font overrides */}
       <FontSizeOverride value={fontOverrides} onChange={setFontOverrides} />
 
       {/* 4. Image uploads */}
-      <div className="card">
-        <h2 className="mb-4 text-lg font-semibold text-nafeth-blue">
-          الصور
-        </h2>
-        <div className="grid gap-4 sm:grid-cols-2">
+      <div className="card animate-in animate-in-delay-5">
+        <div className="section-title">
+          <div className="icon">🖼️</div>
+          <div>
+            <span>الصور</span>
+            <p
+              style={{
+                fontSize: '0.75rem',
+                fontWeight: '400',
+                color: 'var(--text-muted)',
+                marginTop: '2px',
+              }}
+            >
+              ارفع شعار الشركة ورمز QR
+            </p>
+          </div>
+        </div>
+
+        <div className="form-grid-2">
           <ImageUploader
             label="شعار الشركة *"
+            fieldName="Company_logo"
             value={images.logo}
             onChange={(b64) => setImages((prev) => ({ ...prev, logo: b64 }))}
+            fieldMeta={
+              logoSpec
+                ? {
+                    size: logoSpec.size,
+                    position: logoSpec.position,
+                    accepted_formats: logoSpec.accepted_formats,
+                  }
+                : undefined
+            }
           />
           <ImageUploader
             label="رمز QR (اختياري — يُنشأ تلقائيًا)"
+            fieldName="QRcode"
             value={images.qr}
             onChange={(b64) => setImages((prev) => ({ ...prev, qr: b64 }))}
+            fieldMeta={
+              qrSpec
+                ? {
+                    size: qrSpec.size,
+                    position: qrSpec.position,
+                    accepted_formats: qrSpec.accepted_formats,
+                  }
+                : undefined
+            }
           />
         </div>
+
         {errors.image_logo && (
-          <p className="mt-2 text-sm text-red-500">{errors.image_logo}</p>
+          <div className="error-alert" style={{ marginTop: '1rem' }}>
+            <span>⚠️</span>
+            {errors.image_logo}
+          </div>
         )}
       </div>
 
       {/* API-level error */}
       {apiError && (
-        <div className="rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+        <div className="error-alert animate-in">
+          <span>⚠️</span>
           {apiError}
         </div>
       )}
 
-      {/* Submit */}
-      <button
-        type="submit"
-        disabled={loading}
-        className="btn-primary w-full text-lg"
+      {/* Action buttons */}
+      <div
+        style={{ display: 'flex', gap: '1rem' }}
+        className="animate-in animate-in-delay-5"
       >
-        {loading ? (
-          <span className="flex items-center justify-center gap-2">
-            <svg
-              className="h-5 w-5 animate-spin"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-            >
-              <circle
-                className="opacity-25"
-                cx="12"
-                cy="12"
-                r="10"
-                stroke="currentColor"
-                strokeWidth="4"
-              />
-              <path
-                className="opacity-75"
-                fill="currentColor"
-                d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
-              />
-            </svg>
-            جاري إنشاء اللوحة…
-          </span>
-        ) : (
-          'إنشاء اللوحة'
-        )}
-      </button>
+        <button type="submit" disabled={loading} className="btn-primary">
+          {loading ? (
+            <>
+              <div className="spinner" />
+              جاري إنشاء اللوحة…
+            </>
+          ) : (
+            <>
+              <span style={{ fontSize: '1.2rem' }}>📄</span>
+              إنشاء اللوحة
+            </>
+          )}
+        </button>
+      </div>
     </form>
   );
 }

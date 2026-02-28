@@ -1,45 +1,102 @@
 'use client';
 
-import { cn } from '@/lib/utils';
-
 interface TemplateSelectorProps {
   value: number;
   onChange: (templateId: number) => void;
 }
 
 const TEMPLATES = [
-  { id: 1, label: 'لوحة 2×4', file: 'Art_board_2×4.pdf' },
+  { id: 1, label: 'لوحة 2×4', file: 'Art_board_2×4.pdf', size: '4م × 2م' },
 ];
 
 export function TemplateSelector({ value, onChange }: TemplateSelectorProps) {
   return (
-    <div className="card">
-      <h2 className="mb-4 text-lg font-semibold text-nafeth-blue">
-        اختر القالب
-      </h2>
-      <div className="grid grid-cols-3 gap-3">
-        {TEMPLATES.map((t) => (
-          <button
-            key={t.id}
-            type="button"
-            onClick={() => onChange(t.id)}
-            className={cn(
-              'flex flex-col items-center justify-center rounded-lg border-2 p-4 transition-all',
-              value === t.id
-                ? 'border-nafeth-blue bg-nafeth-blue/5 ring-2 ring-nafeth-blue/20'
-                : 'border-gray-200 hover:border-gray-300'
-            )}
+    <div className="card animate-in">
+      <div className="section-title">
+        <div className="icon">📐</div>
+        <div>
+          <span>اختر القالب</span>
+          <p
+            style={{
+              fontSize: '0.75rem',
+              fontWeight: '400',
+              color: 'var(--text-muted)',
+              marginTop: '2px',
+            }}
           >
-            {/* Placeholder thumbnail */}
-            <div
-              className={cn(
-                'mb-2 h-12 w-20 rounded bg-gray-200',
-                value === t.id && 'bg-nafeth-blue/20'
+            اختر تصميم اللوحة المناسب
+          </p>
+        </div>
+      </div>
+
+      <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+        {TEMPLATES.map((t) => {
+          const isSelected = value === t.id;
+          return (
+            <button
+              key={t.id}
+              type="button"
+              onClick={() => onChange(t.id)}
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                padding: '1.25rem 2rem',
+                borderRadius: '14px',
+                border: isSelected
+                  ? '2px solid var(--nafeth-teal)'
+                  : '2px solid rgba(255, 255, 255, 0.08)',
+                background: isSelected
+                  ? 'rgba(13, 148, 136, 0.1)'
+                  : 'rgba(255, 255, 255, 0.02)',
+                cursor: 'pointer',
+                transition: 'all 0.3s ease',
+                color: 'var(--text-primary)',
+                minWidth: '160px',
+                fontFamily: 'inherit',
+                boxShadow: isSelected
+                  ? '0 0 20px rgba(13, 148, 136, 0.15)'
+                  : 'none',
+              }}
+            >
+              {/* Thumbnail */}
+              <div
+                style={{
+                  width: '80px',
+                  height: '40px',
+                  borderRadius: '8px',
+                  background: isSelected
+                    ? 'linear-gradient(135deg, rgba(13, 148, 136, 0.3), rgba(13, 148, 136, 0.1))'
+                    : 'rgba(255, 255, 255, 0.06)',
+                  border: '1px solid rgba(255, 255, 255, 0.1)',
+                  marginBottom: '0.75rem',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontSize: '0.65rem',
+                  color: 'var(--text-muted)',
+                }}
+              >
+                {t.size}
+              </div>
+              <span style={{ fontSize: '0.9rem', fontWeight: '600' }}>
+                {t.label}
+              </span>
+              {isSelected && (
+                <span
+                  style={{
+                    fontSize: '0.7rem',
+                    color: 'var(--nafeth-teal-light)',
+                    marginTop: '0.25rem',
+                  }}
+                >
+                  ✓ محدد
+                </span>
               )}
-            />
-            <span className="text-sm font-medium">{t.label}</span>
-          </button>
-        ))}
+            </button>
+          );
+        })}
       </div>
     </div>
   );

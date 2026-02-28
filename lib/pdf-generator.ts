@@ -1,8 +1,7 @@
-import { PDFDocument, PDFPage, PDFFont, rgb, degrees } from 'pdf-lib';
+import { PDFDocument, PDFFont } from 'pdf-lib';
 import fontkit from '@pdf-lib/fontkit';
 import {
   FIELD_SCHEMA,
-  BOARD_HEIGHT,
   type BoardFormData,
   type FontOverride,
   type BoardImages,
@@ -15,9 +14,9 @@ import {
 
 const FONT_PATHS: Record<string, string> = {
   'LamaSans-Medium': '/fonts/LamaSans-Medium.ttf',
+  'LamaSans-Bold': '/fonts/LamaSans-Bold.ttf',
   'RuaqArabic-Bold': '/fonts/RuaqArabic-Bold.ttf',
   'RuaqArabic-Medium': '/fonts/RuaqArabic-Medium.ttf',
-  'Rubik-Medium': '/fonts/Rubik-Medium.ttf',
 };
 
 // ─── Asset Loading ───────────────────────────────────────────────────
@@ -110,71 +109,15 @@ async function loadFonts(pdfDoc: PDFDocument): Promise<FontCache> {
   return cache;
 }
 
-// ─── Coordinate Conversion ───────────────────────────────────────────
+// ─── Fill PDF Form Fields ────────────────────────────────────────────
 
 /**
- * Convert from top-left origin (schema) to bottom-left origin (PDF).
+ * Fill the actual PDF form fields with user data.
+ * This uses the existing form fields in the PDF template
+ * instead of drawing text at absolute coordinates.
  */
-function convertY(schemaY: number, fieldHeight: number): number {
-  return BOARD_HEIGHT - schemaY - fieldHeight;
-}
-
-// ─── Text Drawing Helpers ────────────────────────────────────────────
-
-/**
- * Draw centered text at a given position.
- */
-function drawCenteredText(
-  page: PDFPage,
-  text: string,
-  x: number,
-  y: number,
-  fontSize: number,
-  font: PDFFont,
-  color: { r: number; g: number; b: number }
-): void {
-  const textWidth = font.widthOfTextAtSize(text, fontSize);
-  const centeredX = x - textWidth / 2;
-
-  page.drawText(text, {
-    x: centeredX,
-    y,
-    size: fontSize,
-    font,
-    color: rgb(color.r, color.g, color.b),
-  });
-}
-
-/**
- * Split "مزاد سهيل تبوك" into ["مزاد", "سهيل تبوك"].
- */
-function splitAuctionName(text: string): [string, string] {
-  const parts = text.trim().split(/\s+/);
-  if (parts[0] === 'مزاد' && parts.length > 1) {
-    return ['مزاد', parts.slice(1).join(' ')];
-  }
-  return [text, ''];
-}
-
-/**
- * Split "عمارة سكنية - تجارية" into ["عمارة", "سكنية - تجارية"].
- * Only if >2 words.
- */
-function splitTypeIfNeeded(text: string): { lines: string[]; useLargeFont: boolean } {
-  const words = text.trim().split(/\s+/);
-  if (words.length > 2) {
-    return {
-      lines: [words[0], words.slice(1).join(' ')],
-      useLargeFont: true,
-    };
-  }
-  return { lines: [text], useLargeFont: false };
-}
-
-// ─── Text Field Rendering ────────────────────────────────────────────
-
-function overlayTextFields(
-  page: PDFPage,
+function fillTextFields(
+  form: ReturnType<PDFDocument['getForm']>,
   formData: Record<string, string | undefined>,
   fontCache: FontCache,
   fontOverrides?: FontOverride
@@ -183,114 +126,69 @@ function overlayTextFields(
     const rawValue = formData[fieldSpec.name as TextFieldName];
     if (!rawValue) continue;
 
-    const font = fontCache[fieldSpec.font.family as FontFamily];
-    if (!font) {
-      console.warn(`Font not loaded for "${fieldSpec.font.family}"`);
-      continue;
-    }
+    try {
+      const textField = form.getTextField(fieldSpec.name);
 
-    let fontSize = fieldSpec.font.size;
-    
-    // Override for phone field
-    if (fieldSpec.name === 'phone') {
-      fontSize = fontOverrides?.phone || 808;
-    }
+      // Get the font for this field
+      const font = fontCache[fieldSpec.font.family as FontFamily];
 
-    // Calculate center X position
-    const fieldCenterX = fieldSpec.position.x + fieldSpec.size.width_pt / 2;
-    
-    // Convert Y coordinate
-    const baseY = convertY(fieldSpec.position.y, fieldSpec.size.height_pt);
-
-    // Special handling for Auction_name
-    if (fieldSpec.name === 'Auction_name') {
-      const [line1, line2] = splitAuctionName(rawValue);
-      
-      if (line2) {
-        // Two lines
-        const lineHeight = fontSize * 1.2;
-        const y1 = baseY + fieldSpec.size.height_pt / 2 + lineHeight / 4;
-        const y2 = baseY + fieldSpec.size.height_pt / 2 - lineHeight / 1.5;
-        
-        drawCenteredText(page, line1, fieldCenterX, y1, fontSize, font, fieldSpec.color);
-        drawCenteredText(page, line2, fieldCenterX, y2, fontSize, font, fieldSpec.color);
-      } else {
-        // Single line
-        const y = baseY + fieldSpec.size.height_pt / 2 - fontSize / 3;
-        drawCenteredText(page, line1, fieldCenterX, y, fontSize, font, fieldSpec.color);
+      // Determine font size
+      let fontSize = fieldSpec.font.size;
+      if (fieldSpec.name === 'phone') {
+        fontSize = fontOverrides?.phone || 808;
       }
-      continue;
-    }
 
-    // Special handling for Type field
-    if (fieldSpec.name === 'Type') {
-      const { lines, useLargeFont } = splitTypeIfNeeded(rawValue);
-      const typeFontSize = useLargeFont ? 400 : fontSize;
-      
-      if (lines.length === 2) {
-        const lineHeight = typeFontSize * 1.2;
-        const y1 = baseY + fieldSpec.size.height_pt / 2 + lineHeight / 4;
-        const y2 = baseY + fieldSpec.size.height_pt / 2 - lineHeight / 1.5;
-        
-        drawCenteredText(page, lines[0], fieldCenterX, y1, typeFontSize, font, fieldSpec.color);
-        drawCenteredText(page, lines[1], fieldCenterX, y2, typeFontSize, font, fieldSpec.color);
-      } else {
-        const y = baseY + fieldSpec.size.height_pt / 2 - typeFontSize / 3;
-        drawCenteredText(page, lines[0], fieldCenterX, y, typeFontSize, font, fieldSpec.color);
+      // Set the font size on the field
+      textField.setFontSize(fontSize);
+
+      // Set text value
+      textField.setText(rawValue);
+
+      // Update appearances with the custom font for Arabic support
+      if (font) {
+        textField.updateAppearances(font);
       }
-      continue;
-    }
 
-    // All other fields: single line, centered
-    const y = baseY + fieldSpec.size.height_pt / 2 - fontSize / 3;
-    drawCenteredText(page, rawValue, fieldCenterX, y, fontSize, font, fieldSpec.color);
+      console.log(`✅ Filled field "${fieldSpec.name}" with "${rawValue}" (${fontSize}pt)`);
+    } catch (err) {
+      console.warn(`⚠️ Could not fill field "${fieldSpec.name}":`, err);
+    }
   }
 }
 
-// ─── Image Drawing ───────────────────────────────────────────────────
-
-async function overlayImages(
+/**
+ * Fill image fields (Company_logo, QRcode) using PDF button fields.
+ */
+async function fillImageFields(
   pdfDoc: PDFDocument,
-  page: PDFPage,
+  form: ReturnType<PDFDocument['getForm']>,
   images: BoardImages
 ): Promise<void> {
-  // Logo
+  // Company Logo
   if (images.logo) {
-    const logoSpec = FIELD_SCHEMA.image_fields.find(f => f.name === 'Company_logo');
-    if (logoSpec) {
+    try {
+      const logoButton = form.getButton('Company_logo');
       const imageBytes = base64ToUint8Array(images.logo);
       const image = isJpeg(images.logo)
         ? await pdfDoc.embedJpg(imageBytes)
         : await pdfDoc.embedPng(imageBytes);
-
-      const x = logoSpec.position.x;
-      const y = convertY(logoSpec.position.y, logoSpec.size.height_pt);
-
-      page.drawImage(image, {
-        x,
-        y,
-        width: logoSpec.size.width_pt,
-        height: logoSpec.size.height_pt,
-      });
+      logoButton.setImage(image);
+      console.log('✅ Set Company_logo image');
+    } catch (err) {
+      console.warn('⚠️ Could not set Company_logo:', err);
     }
   }
 
   // QR Code
   if (images.qr) {
-    const qrSpec = FIELD_SCHEMA.image_fields.find(f => f.name === 'QRcode');
-    if (qrSpec) {
+    try {
+      const qrButton = form.getButton('QRcode');
       const imageBytes = base64ToUint8Array(images.qr);
       const image = await pdfDoc.embedPng(imageBytes);
-
-      const x = qrSpec.position.x;
-      const y = convertY(qrSpec.position.y, qrSpec.size.height_pt);
-
-      page.drawImage(image, {
-        x,
-        y,
-        width: qrSpec.size.width_pt,
-        height: qrSpec.size.height_pt,
-      });
+      qrButton.setImage(image);
+      console.log('✅ Set QRcode image');
+    } catch (err) {
+      console.warn('⚠️ Could not set QRcode:', err);
     }
   }
 }
@@ -307,13 +205,14 @@ export interface GenerateBoardOptions {
 }
 
 /**
- * Generate PDF by overlaying text and images on a template.
+ * Generate PDF by filling the actual form fields in the template.
  * 
  * This approach:
- * - Loads the template PDF as a flat background
- * - Draws text at exact coordinates with perfect centering
- * - Draws images at exact positions
- * - No form fields = no alignment issues!
+ * - Loads the template PDF which already has positioned form fields
+ * - Fills each text field using form.getTextField().setText()
+ * - Fills image fields using form.getButton().setImage()
+ * - Uses custom Arabic fonts via updateAppearances()
+ * - Text lands exactly in the designated fields!
  */
 export async function generateBoard(
   options: GenerateBoardOptions
@@ -332,21 +231,28 @@ export async function generateBoard(
   // 2. Embed fonts
   const fontCache = await loadFonts(pdfDoc);
 
-  // 3. Get first page
-  const page = pdfDoc.getPages()[0];
+  // 3. Get form
+  const form = pdfDoc.getForm();
 
-  // 4. Overlay text fields
-  overlayTextFields(page, formData as Record<string, string | undefined>, fontCache, fontOverrides);
+  // Log available fields for debugging
+  const availableFields = form.getFields().map((f) => ({
+    name: f.getName(),
+    type: f.constructor.name,
+  }));
+  console.log('📋 Available PDF form fields:', JSON.stringify(availableFields, null, 2));
 
-  // 5. Overlay images
-  await overlayImages(pdfDoc, page, images);
+  // 4. Fill text fields using form API
+  fillTextFields(form, formData as Record<string, string | undefined>, fontCache, fontOverrides);
 
-  // 6. Save
+  // 5. Fill image fields using form API
+  await fillImageFields(pdfDoc, form, images);
+
+  // 6. Save (do NOT flatten - keep fields editable)
   return pdfDoc.save();
 }
 
 export async function inspectTemplateFields(templateId: number): Promise<{ name: string; type: string }[]> {
-  const templateBytes = await loadAssetBytes(`/templates/template_${templateId}.pdf`);
+  const templateBytes = await loadAssetBytes(`/templates/${TEMPLATE_FILES[0]}`);
   const pdfDoc = await PDFDocument.load(templateBytes);
   const form = pdfDoc.getForm();
   return form.getFields().map((f) => ({ name: f.getName(), type: f.constructor.name }));

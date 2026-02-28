@@ -14,21 +14,21 @@
     {
       "id": 1,
       "name": "Start_day",
-      "label_ar": "تاريخ البداية",
-      "label_en": "Start Date",
+      "label_ar": "يوم البداية",
+      "label_en": "Start Day",
       "type": "text",
       "position": {
-        "x": 9127.21,
-        "y": 3165.20
+        "x": 9650.18,
+        "y": 3332.76
       },
       "size": {
-        "width_pt": 1520.99,
-        "height_pt": 416.47,
-        "width_cm": 53.6,
-        "height_cm": 14.7
+        "width_pt": 424.62,
+        "height_pt": 254.16,
+        "width_cm": 15.0,
+        "height_cm": 9.0
       },
       "font": {
-        "family": "LamaSans-Medium",
+        "family": "RuaqArabic-Bold",
         "size": 94
       },
       "color": {
@@ -37,6 +37,7 @@
         "b": 1,
         "name": "white"
       },
+      "alignment": "center",
       "location": "top_right",
       "importance": "medium",
       "required": true
@@ -44,22 +45,22 @@
     {
       "id": 2,
       "name": "End_day",
-      "label_ar": "تاريخ النهاية",
-      "label_en": "End Date",
+      "label_ar": "يوم النهاية",
+      "label_en": "End Day",
       "type": "text",
       "position": {
-        "x": 9127.21,
-        "y": 2746.45
+        "x": 9567.74,
+        "y": 2942.82
       },
       "size": {
-        "width_pt": 1525.29,
-        "height_pt": 404.24,
-        "width_cm": 53.8,
-        "height_cm": 14.3
+        "width_pt": 453.76,
+        "height_pt": 257.62,
+        "width_cm": 16.0,
+        "height_cm": 9.1
       },
       "font": {
-        "family": "LamaSans-Medium",
-        "size": 94
+        "family": "RuaqArabic-Bold",
+        "size": 92
       },
       "color": {
         "r": 1,
@@ -67,6 +68,7 @@
         "b": 1,
         "name": "white"
       },
+      "alignment": "center",
       "location": "top_right",
       "importance": "medium",
       "required": true
@@ -78,17 +80,17 @@
       "label_en": "Start Hour",
       "type": "text",
       "position": {
-        "x": 9127.21,
-        "y": 3165.20
+        "x": 10068.30,
+        "y": 3133.83
       },
       "size": {
-        "width_pt": 1520.99,
-        "height_pt": 416.47,
-        "width_cm": 53.6,
-        "height_cm": 14.7
+        "width_pt": 436.70,
+        "height_pt": 234.06,
+        "width_cm": 15.4,
+        "height_cm": 8.3
       },
       "font": {
-        "family": "LamaSans-Medium",
+        "family": "LamaSans-Bold",
         "size": 94
       },
       "color": {
@@ -97,6 +99,7 @@
         "b": 1,
         "name": "white"
       },
+      "alignment": "center",
       "location": "top_right",
       "importance": "medium",
       "required": true
@@ -108,17 +111,17 @@
       "label_en": "End Hour",
       "type": "text",
       "position": {
-        "x": 9127.21,
-        "y": 2746.45
+        "x": 10012.00,
+        "y": 2792.81
       },
       "size": {
-        "width_pt": 1525.29,
-        "height_pt": 404.24,
-        "width_cm": 53.8,
-        "height_cm": 14.3
+        "width_pt": 505.30,
+        "height_pt": 205.26,
+        "width_cm": 17.8,
+        "height_cm": 7.2
       },
       "font": {
-        "family": "LamaSans-Medium",
+        "family": "LamaSans-Bold",
         "size": 94
       },
       "color": {
@@ -127,9 +130,136 @@
         "b": 1,
         "name": "white"
       },
+      "alignment": "center",
       "location": "top_right",
       "importance": "medium",
       "required": true
+    },
+    {
+      "id": 19,
+      "name": "start_date",
+      "label_ar": "تاريخ البداية",
+      "label_en": "Start Date",
+      "type": "text",
+      "position": {
+        "x": 9188.83,
+        "y": 3323.73
+      },
+      "size": {
+        "width_pt": 500.84,
+        "height_pt": 258.29,
+        "width_cm": 17.7,
+        "height_cm": 9.1
+      },
+      "font": {
+        "family": "LamaSans-Bold",
+        "size": 92
+      },
+      "color": {
+        "r": 1,
+        "g": 1,
+        "b": 1,
+        "name": "white"
+      },
+      "alignment": "center",
+      "location": "top_right",
+      "importance": "medium",
+      "required": true
+    },
+    {
+      "id": 20,
+      "name": "end_date",
+      "label_ar": "تاريخ النهاية",
+      "label_en": "End Date",
+      "type": "text",
+      "position": {
+        "x": 9118.79,
+        "y": 2932.97
+      },
+      "size": {
+        "width_pt": 493.66,
+        "height_pt": 253.71,
+        "width_cm": 17.4,
+        "height_cm": 8.9
+      },
+      "font": {
+        "family": "LamaSans-Bold",
+        "size": 92
+      },
+      "color": {
+        "r": 1,
+        "g": 1,
+        "b": 1,
+        "name": "white"
+      },
+      "alignment": "center",
+      "location": "top_right",
+      "importance": "medium",
+      "required": true
+    },
+    {
+      "id": 21,
+      "name": "PM_AM_start",
+      "label_ar": "ص/م البداية",
+      "label_en": "AM/PM Start",
+      "type": "text",
+      "position": {
+        "x": 10011.10,
+        "y": 3168.46
+      },
+      "size": {
+        "width_pt": 177.50,
+        "height_pt": 171.25,
+        "width_cm": 6.3,
+        "height_cm": 6.0
+      },
+      "font": {
+        "family": "RuaqArabic-Bold",
+        "size": 94
+      },
+      "color": {
+        "r": 1,
+        "g": 1,
+        "b": 1,
+        "name": "white"
+      },
+      "alignment": "center",
+      "location": "top_right",
+      "importance": "medium",
+      "required": true,
+      "notes": "حرف واحد: ص للصباح أو م للمساء"
+    },
+    {
+      "id": 22,
+      "name": "PM_AM_end",
+      "label_ar": "ص/م النهاية",
+      "label_en": "AM/PM End",
+      "type": "text",
+      "position": {
+        "x": 9986.64,
+        "y": 2821.54
+      },
+      "size": {
+        "width_pt": 210.86,
+        "height_pt": 149.64,
+        "width_cm": 7.4,
+        "height_cm": 5.3
+      },
+      "font": {
+        "family": "RuaqArabic-Bold",
+        "size": 94
+      },
+      "color": {
+        "r": 1,
+        "g": 1,
+        "b": 1,
+        "name": "white"
+      },
+      "alignment": "center",
+      "location": "top_right",
+      "importance": "medium",
+      "required": true,
+      "notes": "حرف واحد: ص للصباح أو م للمساء"
     },
     {
       "id": 3,
@@ -138,18 +268,18 @@
       "label_en": "Service Provider",
       "type": "text",
       "position": {
-        "x": 9127.21,
-        "y": 2217.59
+        "x": 9179.57,
+        "y": 2226.97
       },
       "size": {
-        "width_pt": 1520.99,
+        "width_pt": 1521.03,
         "height_pt": 435.66,
         "width_cm": 53.6,
         "height_cm": 15.4
       },
       "font": {
-        "family": "LamaSans-Medium",
-        "size": 94
+        "family": "RuaqArabic-Medium",
+        "size": 170
       },
       "color": {
         "r": 1,
@@ -157,6 +287,7 @@
         "b": 1,
         "name": "white"
       },
+      "alignment": "center",
       "location": "right_upper",
       "importance": "medium",
       "required": true
@@ -168,14 +299,14 @@
       "label_en": "Auction Name",
       "type": "text",
       "position": {
-        "x": 9133.26,
-        "y": 903.9
+        "x": 8869.83,
+        "y": 879.85
       },
       "size": {
-        "width_pt": 1496.34,
-        "height_pt": 939.0,
-        "width_cm": 52.8,
-        "height_cm": 33.1
+        "width_pt": 1838.27,
+        "height_pt": 651.46,
+        "width_cm": 64.9,
+        "height_cm": 23.0
       },
       "font": {
         "family": "RuaqArabic-Bold",
@@ -187,6 +318,7 @@
         "b": 0.266,
         "name": "dark_blue"
       },
+      "alignment": "right",
       "location": "right_center",
       "importance": "critical",
       "required": true,
@@ -199,13 +331,13 @@
       "label_en": "License Number",
       "type": "text",
       "position": {
-        "x": 5720.95,
+        "x": 5615.88,
         "y": 1104.65
       },
       "size": {
-        "width_pt": 1506.17,
+        "width_pt": 1725.86,
         "height_pt": 566.56,
-        "width_cm": 53.1,
+        "width_cm": 60.9,
         "height_cm": 20.0
       },
       "font": {
@@ -218,6 +350,7 @@
         "b": 0.266,
         "name": "dark_blue"
       },
+      "alignment": "center",
       "location": "center",
       "importance": "high",
       "required": true
@@ -229,18 +362,18 @@
       "label_en": "Property Type",
       "type": "text",
       "position": {
-        "x": 738.13,
-        "y": 2119.3
+        "x": 671.27,
+        "y": 2177.76
       },
       "size": {
-        "width_pt": 2322.81,
-        "height_pt": 787.63,
-        "width_cm": 81.9,
-        "height_cm": 27.8
+        "width_pt": 2345.85,
+        "height_pt": 640.90,
+        "width_cm": 82.8,
+        "height_cm": 22.6
       },
       "font": {
-        "family": "RuaqArabic-Medium",
-        "size": 300
+        "family": "RuaqArabic-Bold",
+        "size": 280
       },
       "color": {
         "r": 1,
@@ -248,6 +381,7 @@
         "b": 1,
         "name": "white"
       },
+      "alignment": "center",
       "location": "left_upper",
       "importance": "critical",
       "required": true,
@@ -260,12 +394,12 @@
       "label_en": "Court Number",
       "type": "text",
       "position": {
-        "x": 215.5,
-        "y": 87.52
+        "x": 210.26,
+        "y": 92.76
       },
       "size": {
         "width_pt": 1727.04,
-        "height_pt": 303.7,
+        "height_pt": 303.70,
         "width_cm": 60.9,
         "height_cm": 10.7
       },
@@ -279,6 +413,7 @@
         "b": 0.266,
         "name": "dark_blue"
       },
+      "alignment": "center",
       "location": "bottom_row",
       "importance": "low",
       "required": false,
@@ -296,7 +431,7 @@
       },
       "size": {
         "width_pt": 1146.73,
-        "height_pt": 303.7,
+        "height_pt": 303.70,
         "width_cm": 40.5,
         "height_cm": 10.7
       },
@@ -310,6 +445,7 @@
         "b": 0.266,
         "name": "dark_blue"
       },
+      "alignment": "center",
       "location": "bottom_row",
       "importance": "low",
       "required": false
@@ -340,6 +476,7 @@
         "b": 0.266,
         "name": "dark_blue"
       },
+      "alignment": "center",
       "location": "bottom_row",
       "importance": "low",
       "required": false
@@ -356,7 +493,7 @@
       },
       "size": {
         "width_pt": 1146.73,
-        "height_pt": 303.7,
+        "height_pt": 303.70,
         "width_cm": 40.5,
         "height_cm": 10.7
       },
@@ -370,6 +507,7 @@
         "b": 0.266,
         "name": "dark_blue"
       },
+      "alignment": "center",
       "location": "bottom_row",
       "importance": "low",
       "required": false
@@ -386,7 +524,7 @@
       },
       "size": {
         "width_pt": 1146.72,
-        "height_pt": 303.7,
+        "height_pt": 303.70,
         "width_cm": 40.5,
         "height_cm": 10.7
       },
@@ -400,6 +538,7 @@
         "b": 0.266,
         "name": "dark_blue"
       },
+      "alignment": "center",
       "location": "bottom_row",
       "importance": "medium",
       "required": true
@@ -411,14 +550,14 @@
       "label_en": "Usage",
       "type": "text",
       "position": {
-        "x": 7618.64,
-        "y": 87.52
+        "x": 7532.84,
+        "y": 92.42
       },
       "size": {
-        "width_pt": 1136.25,
-        "height_pt": 301.83,
-        "width_cm": 40.1,
-        "height_cm": 10.7
+        "width_pt": 1279.53,
+        "height_pt": 384.38,
+        "width_cm": 45.1,
+        "height_cm": 13.6
       },
       "font": {
         "family": "RuaqArabic-Medium",
@@ -430,6 +569,7 @@
         "b": 0.266,
         "name": "dark_blue"
       },
+      "alignment": "center",
       "location": "bottom_row",
       "importance": "medium",
       "required": false
@@ -441,14 +581,14 @@
       "label_en": "District",
       "type": "text",
       "position": {
-        "x": 8846.84,
-        "y": 90.04
+        "x": 8827.41,
+        "y": 85.28
       },
       "size": {
-        "width_pt": 1560.26,
-        "height_pt": 306.57,
-        "width_cm": 55.1,
-        "height_cm": 10.8
+        "width_pt": 1560.29,
+        "height_pt": 391.63,
+        "width_cm": 55.0,
+        "height_cm": 13.8
       },
       "font": {
         "family": "RuaqArabic-Medium",
@@ -460,6 +600,7 @@
         "b": 0.266,
         "name": "dark_blue"
       },
+      "alignment": "center",
       "location": "bottom_row",
       "importance": "medium",
       "required": true
@@ -471,17 +612,17 @@
       "label_en": "Phone Number",
       "type": "text",
       "position": {
-        "x": 582.97,
+        "x": 239.10,
         "y": 906.03
       },
       "size": {
-        "width_pt": 4707.81,
-        "height_pt": 837.9,
-        "width_cm": 166.1,
+        "width_pt": 5204.51,
+        "height_pt": 837.90,
+        "width_cm": 183.6,
         "height_cm": 29.6
       },
       "font": {
-        "family": "LamaSans-Medium",
+        "family": "LamaSans-Bold",
         "size": 12
       },
       "color": {
@@ -490,6 +631,7 @@
         "b": 0.266,
         "name": "dark_blue"
       },
+      "alignment": "center",
       "location": "left_center",
       "importance": "high",
       "required": true,
@@ -504,19 +646,24 @@
       "label_en": "Company Logo",
       "type": "image",
       "position": {
-        "x": 7549.7,
-        "y": 833.87
+        "x": 7396.87,
+        "y": 862.53
       },
       "size": {
-        "width_pt": 1354.87,
+        "width_pt": 1469.49,
         "height_pt": 823.54,
-        "width_cm": 47.8,
+        "width_cm": 51.8,
         "height_cm": 29.1
       },
       "location": "right_center",
       "importance": "high",
       "required": true,
-      "accepted_formats": ["png", "jpg", "jpeg", "svg"],
+      "accepted_formats": [
+        "png",
+        "jpg",
+        "jpeg",
+        "svg"
+      ],
       "notes": "شعار الشركة/المكتب المنفذ"
     },
     {
@@ -526,7 +673,7 @@
       "label_en": "QR Code",
       "type": "image",
       "position": {
-        "x": 334.3,
+        "x": 334.30,
         "y": 3430.73
       },
       "size": {
@@ -538,7 +685,10 @@
       "location": "top_left",
       "importance": "high",
       "required": true,
-      "accepted_formats": ["png", "svg"],
+      "accepted_formats": [
+        "png",
+        "svg"
+      ],
       "notes": "رمز QR للربط بصفحة المزاد في منصة إنفاذ"
     }
   ],
@@ -547,9 +697,13 @@
       "Type",
       "Auction_name",
       "Start_day",
-      "End_day",
+      "start_date",
       "Start_hour",
+      "PM_AM_start",
+      "End_day",
+      "end_date",
       "End_hour",
+      "PM_AM_end",
       "Area",
       "District",
       "phone",
@@ -568,9 +722,13 @@
     "auction_info": [
       "Auction_name",
       "Start_day",
-      "End_day",
+      "start_date",
       "Start_hour",
+      "PM_AM_start",
+      "End_day",
+      "end_date",
       "End_hour",
+      "PM_AM_end",
       "Provider",
       "License_number"
     ],
@@ -584,14 +742,48 @@
   },
   "fonts_used": [
     {
+      "name": "RuaqArabic-Bold",
+      "usage_count": 7,
+      "fields": [
+        "Start_day",
+        "End_day",
+        "PM_AM_start",
+        "PM_AM_end",
+        "Auction_name",
+        "Type"
+      ]
+    },
+    {
+      "name": "LamaSans-Bold",
+      "usage_count": 5,
+      "fields": [
+        "Start_hour",
+        "End_hour",
+        "start_date",
+        "end_date",
+        "phone"
+      ]
+    },
+    {
       "name": "LamaSans-Medium",
-      "usage_count": 9,
-      "fields": ["Start_day", "End_day", "Start_hour", "End_hour", "Provider", "Court_number", "Sakk_number", "Land_number", "Area", "phone"]
+      "usage_count": 5,
+      "fields": [
+        "License_number",
+        "Court_number",
+        "Sakk_number",
+        "Land_number",
+        "Area"
+      ]
     },
     {
       "name": "RuaqArabic-Medium",
-      "usage_count": 5,
-      "fields": ["Auction_name", "Plan_number", "Usage", "Type", "District"]
+      "usage_count": 4,
+      "fields": [
+        "Provider",
+        "Plan_number",
+        "Usage",
+        "District"
+      ]
     }
   ]
 }

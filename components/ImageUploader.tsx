@@ -2,23 +2,30 @@
 
 import { useCallback, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
-import { cn } from '@/lib/utils';
 import { fileToBase64 } from '@/lib/utils';
 
 interface ImageUploaderProps {
   label: string;
-  value?: string;          // base64 string (no prefix)
+  fieldName: string;
+  value?: string;
   onChange: (base64: string) => void;
   accept?: Record<string, string[]>;
   maxSizeMB?: number;
+  fieldMeta?: {
+    size: { width_pt: number; height_pt: number; width_cm: number; height_cm: number };
+    position: { x: number; y: number };
+    accepted_formats?: string[];
+  };
 }
 
 export function ImageUploader({
   label,
+  fieldName,
   value,
   onChange,
   accept = { 'image/png': ['.png'], 'image/jpeg': ['.jpg', '.jpeg'] },
   maxSizeMB = 10,
+  fieldMeta,
 }: ImageUploaderProps) {
   const [error, setError] = useState<string | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
@@ -54,37 +61,72 @@ export function ImageUploader({
     multiple: false,
   });
 
+  const hasImage = !!(preview || value);
+
   return (
-    <div>
-      <label className="label-field">{label}</label>
+    <div className="field-group">
+      <label className="label-field">
+        {label}
+      </label>
+
       <div
         {...getRootProps()}
-        className={cn(
-          'flex cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed p-6 transition-colors',
-          isDragActive
-            ? 'border-nafeth-blue bg-nafeth-blue/5'
-            : 'border-gray-300 hover:border-gray-400',
-          error && 'border-red-400'
-        )}
+        className={`drop-zone ${isDragActive ? 'active' : ''} ${hasImage ? 'has-image' : ''} ${error ? 'error' : ''}`}
+        style={error ? { borderColor: 'var(--error)' } : {}}
       >
         <input {...getInputProps()} />
 
-        {preview || value ? (
-          <img
-            src={preview ?? `data:image/png;base64,${value}`}
-            alt={label}
-            className="h-24 w-auto object-contain"
-          />
+        {hasImage ? (
+          <div style={{ textAlign: 'center' }}>
+            <img
+              src={preview ?? `data:image/png;base64,${value}`}
+              alt={label}
+              style={{
+                maxHeight: '100px',
+                maxWidth: '100%',
+                objectFit: 'contain',
+                borderRadius: '8px',
+                marginBottom: '0.5rem',
+              }}
+            />
+            <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
+              اضغط لتغيير الصورة
+            </p>
+          </div>
         ) : (
-          <div className="text-center text-sm text-gray-500">
-            <p>اسحب الصورة هنا أو اضغط للاختيار</p>
-            <p className="mt-1 text-xs text-gray-400">
+          <div style={{ textAlign: 'center' }}>
+            <div
+              style={{
+                fontSize: '2rem',
+                marginBottom: '0.5rem',
+                opacity: 0.5,
+              }}
+            >
+              {fieldName === 'QRcode' ? '📱' : '🖼️'}
+            </div>
+            <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>
+              اسحب الصورة هنا أو اضغط للاختيار
+            </p>
+            <p style={{ color: 'var(--text-muted)', fontSize: '0.75rem', marginTop: '0.25rem' }}>
               PNG / JPG — حد أقصى {maxSizeMB} ميجابايت
             </p>
           </div>
         )}
       </div>
-      {error && <p className="mt-1 text-sm text-red-500">{error}</p>}
+
+      {/* Field metadata */}
+      {fieldMeta && (
+        <div className="field-badge">
+          {fieldMeta.size.width_cm.toFixed(1)} × {fieldMeta.size.height_cm.toFixed(1)} سم
+          {fieldMeta.accepted_formats && ` • ${fieldMeta.accepted_formats.join(', ')}`}
+        </div>
+      )}
+
+      {error && (
+        <p style={{ marginTop: '0.25rem', fontSize: '0.8rem', color: 'var(--error)' }}>
+          {error}
+        </p>
+      )}
     </div>
   );
 }
