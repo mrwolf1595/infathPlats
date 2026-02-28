@@ -1,0 +1,597 @@
+{
+  "board_info": {
+    "dimensions": {
+      "width_m": 4.0,
+      "height_m": 2.0,
+      "width_cm": 400,
+      "height_cm": 200,
+      "width_pt": 11338.6,
+      "height_pt": 5669.29
+    },
+    "description": "لوحة إعلانية لمزادات إنفاذ"
+  },
+  "text_fields": [
+    {
+      "id": 1,
+      "name": "Start_day",
+      "label_ar": "تاريخ البداية",
+      "label_en": "Start Date",
+      "type": "text",
+      "position": {
+        "x": 9127.21,
+        "y": 3165.20
+      },
+      "size": {
+        "width_pt": 1520.99,
+        "height_pt": 416.47,
+        "width_cm": 53.6,
+        "height_cm": 14.7
+      },
+      "font": {
+        "family": "LamaSans-Medium",
+        "size": 94
+      },
+      "color": {
+        "r": 1,
+        "g": 1,
+        "b": 1,
+        "name": "white"
+      },
+      "location": "top_right",
+      "importance": "medium",
+      "required": true
+    },
+    {
+      "id": 2,
+      "name": "End_day",
+      "label_ar": "تاريخ النهاية",
+      "label_en": "End Date",
+      "type": "text",
+      "position": {
+        "x": 9127.21,
+        "y": 2746.45
+      },
+      "size": {
+        "width_pt": 1525.29,
+        "height_pt": 404.24,
+        "width_cm": 53.8,
+        "height_cm": 14.3
+      },
+      "font": {
+        "family": "LamaSans-Medium",
+        "size": 94
+      },
+      "color": {
+        "r": 1,
+        "g": 1,
+        "b": 1,
+        "name": "white"
+      },
+      "location": "top_right",
+      "importance": "medium",
+      "required": true
+    },
+    {
+      "id": 15,
+      "name": "Start_hour",
+      "label_ar": "ساعة البداية",
+      "label_en": "Start Hour",
+      "type": "text",
+      "position": {
+        "x": 9127.21,
+        "y": 3165.20
+      },
+      "size": {
+        "width_pt": 1520.99,
+        "height_pt": 416.47,
+        "width_cm": 53.6,
+        "height_cm": 14.7
+      },
+      "font": {
+        "family": "LamaSans-Medium",
+        "size": 94
+      },
+      "color": {
+        "r": 1,
+        "g": 1,
+        "b": 1,
+        "name": "white"
+      },
+      "location": "top_right",
+      "importance": "medium",
+      "required": true
+    },
+    {
+      "id": 16,
+      "name": "End_hour",
+      "label_ar": "ساعة النهاية",
+      "label_en": "End Hour",
+      "type": "text",
+      "position": {
+        "x": 9127.21,
+        "y": 2746.45
+      },
+      "size": {
+        "width_pt": 1525.29,
+        "height_pt": 404.24,
+        "width_cm": 53.8,
+        "height_cm": 14.3
+      },
+      "font": {
+        "family": "LamaSans-Medium",
+        "size": 94
+      },
+      "color": {
+        "r": 1,
+        "g": 1,
+        "b": 1,
+        "name": "white"
+      },
+      "location": "top_right",
+      "importance": "medium",
+      "required": true
+    },
+    {
+      "id": 3,
+      "name": "Provider",
+      "label_ar": "مقدم الخدمة",
+      "label_en": "Service Provider",
+      "type": "text",
+      "position": {
+        "x": 9127.21,
+        "y": 2217.59
+      },
+      "size": {
+        "width_pt": 1520.99,
+        "height_pt": 435.66,
+        "width_cm": 53.6,
+        "height_cm": 15.4
+      },
+      "font": {
+        "family": "LamaSans-Medium",
+        "size": 94
+      },
+      "color": {
+        "r": 1,
+        "g": 1,
+        "b": 1,
+        "name": "white"
+      },
+      "location": "right_upper",
+      "importance": "medium",
+      "required": true
+    },
+    {
+      "id": 4,
+      "name": "Auction_name",
+      "label_ar": "اسم المزاد",
+      "label_en": "Auction Name",
+      "type": "text",
+      "position": {
+        "x": 9133.26,
+        "y": 903.9
+      },
+      "size": {
+        "width_pt": 1496.34,
+        "height_pt": 939.0,
+        "width_cm": 52.8,
+        "height_cm": 33.1
+      },
+      "font": {
+        "family": "RuaqArabic-Bold",
+        "size": 278
+      },
+      "color": {
+        "r": 0.082,
+        "g": 0.105,
+        "b": 0.266,
+        "name": "dark_blue"
+      },
+      "location": "right_center",
+      "importance": "critical",
+      "required": true,
+      "notes": "الحقل الرئيسي - أكبر حجم بعد نوع العقار"
+    },
+    {
+      "id": 5,
+      "name": "License_number",
+      "label_ar": "رقم الترخيص",
+      "label_en": "License Number",
+      "type": "text",
+      "position": {
+        "x": 5720.95,
+        "y": 1104.65
+      },
+      "size": {
+        "width_pt": 1506.17,
+        "height_pt": 566.56,
+        "width_cm": 53.1,
+        "height_cm": 20.0
+      },
+      "font": {
+        "family": "LamaSans-Medium",
+        "size": 213
+      },
+      "color": {
+        "r": 0.082,
+        "g": 0.105,
+        "b": 0.266,
+        "name": "dark_blue"
+      },
+      "location": "center",
+      "importance": "high",
+      "required": true
+    },
+    {
+      "id": 6,
+      "name": "Type",
+      "label_ar": "نوع العقار",
+      "label_en": "Property Type",
+      "type": "text",
+      "position": {
+        "x": 738.13,
+        "y": 2119.3
+      },
+      "size": {
+        "width_pt": 2322.81,
+        "height_pt": 787.63,
+        "width_cm": 81.9,
+        "height_cm": 27.8
+      },
+      "font": {
+        "family": "RuaqArabic-Medium",
+        "size": 300
+      },
+      "color": {
+        "r": 1,
+        "g": 1,
+        "b": 1,
+        "name": "white"
+      },
+      "location": "left_upper",
+      "importance": "critical",
+      "required": true,
+      "notes": "أكبر حقل نصي - الأكثر بروزاً"
+    },
+    {
+      "id": 7,
+      "name": "Court_number",
+      "label_ar": "رقم المحكمة",
+      "label_en": "Court Number",
+      "type": "text",
+      "position": {
+        "x": 215.5,
+        "y": 87.52
+      },
+      "size": {
+        "width_pt": 1727.04,
+        "height_pt": 303.7,
+        "width_cm": 60.9,
+        "height_cm": 10.7
+      },
+      "font": {
+        "family": "LamaSans-Medium",
+        "size": 160
+      },
+      "color": {
+        "r": 0.082,
+        "g": 0.105,
+        "b": 0.266,
+        "name": "dark_blue"
+      },
+      "location": "bottom_row",
+      "importance": "low",
+      "required": false,
+      "notes": "جزء من الصف السفلي للتفاصيل"
+    },
+    {
+      "id": 8,
+      "name": "Sakk_number",
+      "label_ar": "رقم الصك",
+      "label_en": "Deed Number",
+      "type": "text",
+      "position": {
+        "x": 2089.23,
+        "y": 87.52
+      },
+      "size": {
+        "width_pt": 1146.73,
+        "height_pt": 303.7,
+        "width_cm": 40.5,
+        "height_cm": 10.7
+      },
+      "font": {
+        "family": "LamaSans-Medium",
+        "size": 160
+      },
+      "color": {
+        "r": 0.082,
+        "g": 0.105,
+        "b": 0.266,
+        "name": "dark_blue"
+      },
+      "location": "bottom_row",
+      "importance": "low",
+      "required": false
+    },
+    {
+      "id": 9,
+      "name": "Land_number",
+      "label_ar": "رقم الأرض",
+      "label_en": "Land Number",
+      "type": "text",
+      "position": {
+        "x": 3471.59,
+        "y": 87.52
+      },
+      "size": {
+        "width_pt": 1157.39,
+        "height_pt": 298.55,
+        "width_cm": 40.8,
+        "height_cm": 10.5
+      },
+      "font": {
+        "family": "LamaSans-Medium",
+        "size": 180
+      },
+      "color": {
+        "r": 0.082,
+        "g": 0.105,
+        "b": 0.266,
+        "name": "dark_blue"
+      },
+      "location": "bottom_row",
+      "importance": "low",
+      "required": false
+    },
+    {
+      "id": 10,
+      "name": "Plan_number",
+      "label_ar": "رقم المخطط",
+      "label_en": "Plan Number",
+      "type": "text",
+      "position": {
+        "x": 4901.06,
+        "y": 87.52
+      },
+      "size": {
+        "width_pt": 1146.73,
+        "height_pt": 303.7,
+        "width_cm": 40.5,
+        "height_cm": 10.7
+      },
+      "font": {
+        "family": "RuaqArabic-Medium",
+        "size": 213
+      },
+      "color": {
+        "r": 0.082,
+        "g": 0.105,
+        "b": 0.266,
+        "name": "dark_blue"
+      },
+      "location": "bottom_row",
+      "importance": "low",
+      "required": false
+    },
+    {
+      "id": 11,
+      "name": "Area",
+      "label_ar": "المساحة",
+      "label_en": "Area",
+      "type": "text",
+      "position": {
+        "x": 6288.65,
+        "y": 87.52
+      },
+      "size": {
+        "width_pt": 1146.72,
+        "height_pt": 303.7,
+        "width_cm": 40.5,
+        "height_cm": 10.7
+      },
+      "font": {
+        "family": "LamaSans-Medium",
+        "size": 180
+      },
+      "color": {
+        "r": 0.082,
+        "g": 0.105,
+        "b": 0.266,
+        "name": "dark_blue"
+      },
+      "location": "bottom_row",
+      "importance": "medium",
+      "required": true
+    },
+    {
+      "id": 12,
+      "name": "Usage",
+      "label_ar": "الاستخدام",
+      "label_en": "Usage",
+      "type": "text",
+      "position": {
+        "x": 7618.64,
+        "y": 87.52
+      },
+      "size": {
+        "width_pt": 1136.25,
+        "height_pt": 301.83,
+        "width_cm": 40.1,
+        "height_cm": 10.7
+      },
+      "font": {
+        "family": "RuaqArabic-Medium",
+        "size": 213
+      },
+      "color": {
+        "r": 0.082,
+        "g": 0.105,
+        "b": 0.266,
+        "name": "dark_blue"
+      },
+      "location": "bottom_row",
+      "importance": "medium",
+      "required": false
+    },
+    {
+      "id": 13,
+      "name": "District",
+      "label_ar": "الحي",
+      "label_en": "District",
+      "type": "text",
+      "position": {
+        "x": 8846.84,
+        "y": 90.04
+      },
+      "size": {
+        "width_pt": 1560.26,
+        "height_pt": 306.57,
+        "width_cm": 55.1,
+        "height_cm": 10.8
+      },
+      "font": {
+        "family": "RuaqArabic-Medium",
+        "size": 213
+      },
+      "color": {
+        "r": 0.082,
+        "g": 0.105,
+        "b": 0.266,
+        "name": "dark_blue"
+      },
+      "location": "bottom_row",
+      "importance": "medium",
+      "required": true
+    },
+    {
+      "id": 14,
+      "name": "phone",
+      "label_ar": "رقم الهاتف",
+      "label_en": "Phone Number",
+      "type": "text",
+      "position": {
+        "x": 582.97,
+        "y": 906.03
+      },
+      "size": {
+        "width_pt": 4707.81,
+        "height_pt": 837.9,
+        "width_cm": 166.1,
+        "height_cm": 29.6
+      },
+      "font": {
+        "family": "LamaSans-Medium",
+        "size": 12
+      },
+      "color": {
+        "r": 0.082,
+        "g": 0.105,
+        "b": 0.266,
+        "name": "dark_blue"
+      },
+      "location": "left_center",
+      "importance": "high",
+      "required": true,
+      "notes": "أطول حقل - لكن بخط صغير"
+    }
+  ],
+  "image_fields": [
+    {
+      "id": 17,
+      "name": "Company_logo",
+      "label_ar": "شعار الشركة",
+      "label_en": "Company Logo",
+      "type": "image",
+      "position": {
+        "x": 7549.7,
+        "y": 833.87
+      },
+      "size": {
+        "width_pt": 1354.87,
+        "height_pt": 823.54,
+        "width_cm": 47.8,
+        "height_cm": 29.1
+      },
+      "location": "right_center",
+      "importance": "high",
+      "required": true,
+      "accepted_formats": ["png", "jpg", "jpeg", "svg"],
+      "notes": "شعار الشركة/المكتب المنفذ"
+    },
+    {
+      "id": 18,
+      "name": "QRcode",
+      "label_ar": "رمز QR",
+      "label_en": "QR Code",
+      "type": "image",
+      "position": {
+        "x": 334.3,
+        "y": 3430.73
+      },
+      "size": {
+        "width_pt": 1611.65,
+        "height_pt": 1539.39,
+        "width_cm": 56.9,
+        "height_cm": 54.3
+      },
+      "location": "top_left",
+      "importance": "high",
+      "required": true,
+      "accepted_formats": ["png", "svg"],
+      "notes": "رمز QR للربط بصفحة المزاد في منصة إنفاذ"
+    }
+  ],
+  "field_groups": {
+    "essential": [
+      "Type",
+      "Auction_name",
+      "Start_day",
+      "End_day",
+      "Start_hour",
+      "End_hour",
+      "Area",
+      "District",
+      "phone",
+      "Company_logo",
+      "QRcode"
+    ],
+    "property_details": [
+      "Court_number",
+      "Sakk_number",
+      "Land_number",
+      "Plan_number",
+      "Area",
+      "Usage",
+      "District"
+    ],
+    "auction_info": [
+      "Auction_name",
+      "Start_day",
+      "End_day",
+      "Start_hour",
+      "End_hour",
+      "Provider",
+      "License_number"
+    ],
+    "branding": [
+      "Company_logo",
+      "phone"
+    ],
+    "digital": [
+      "QRcode"
+    ]
+  },
+  "fonts_used": [
+    {
+      "name": "LamaSans-Medium",
+      "usage_count": 9,
+      "fields": ["Start_day", "End_day", "Start_hour", "End_hour", "Provider", "Court_number", "Sakk_number", "Land_number", "Area", "phone"]
+    },
+    {
+      "name": "RuaqArabic-Medium",
+      "usage_count": 5,
+      "fields": ["Auction_name", "Plan_number", "Usage", "Type", "District"]
+    }
+  ]
+}
