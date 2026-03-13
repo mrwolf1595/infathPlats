@@ -9,6 +9,9 @@ export const BOARD_HEIGHT = FIELD_SCHEMA.board_info.dimensions.height_pt; // 566
 /** Fields that allow user font-size override (up to 1000pt) */
 export const ALLOWED_FONT_OVERRIDES = ['phone'] as const;
 
+/** Available PDF template files */
+export const TEMPLATE_FILES = ['Art_board_2×4.pdf', 'Art_board_3×6.pdf'] as const;
+
 // ─── Inferred Types from Schema ──────────────────────────────────────
 
 /** A single text field entry from form_fields_schema.json */

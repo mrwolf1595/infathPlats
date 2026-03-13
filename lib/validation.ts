@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { FIELD_SCHEMA, ALLOWED_FONT_OVERRIDES } from './types';
+import { FIELD_SCHEMA, ALLOWED_FONT_OVERRIDES, TEMPLATE_FILES } from './types';
 
 // ─── Build Zod schema dynamically from form_fields_schema.json ───────
 
@@ -45,7 +45,7 @@ export const boardFormSchema = z.object({
     .number()
     .int()
     .min(1, 'اختر قالبًا')
-    .max(1, 'القالب غير صالح'),
+    .max(TEMPLATE_FILES.length, 'القالب غير صالح'),
   formData: textFieldsSchema,
   fontOverrides: fontOverrideSchema.optional(),
   images: imagesSchema,

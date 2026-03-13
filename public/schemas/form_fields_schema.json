@@ -14,22 +14,46 @@
     {
       "id": 1,
       "name": "Start_day",
-      "label_ar": "يوم البداية",
-      "label_en": "Start Day",
-      "type": "text",
+      "label_ar": "يوم وتاريخ البداية",
+      "label_en": "Start Day & Date",
+      "type": "composite_text",
       "position": {
-        "x": 9650.18,
-        "y": 3332.76
+        "x": 9236.74,
+        "y": 3443.18
       },
       "size": {
-        "width_pt": 424.62,
-        "height_pt": 254.16,
-        "width_cm": 15.0,
-        "height_cm": 9.0
+        "width_pt": 1453.56,
+        "height_pt": 162.33,
+        "width_cm": 51.3,
+        "height_cm": 5.7
       },
       "font": {
-        "family": "RuaqArabic-Bold",
-        "size": 94
+        "family": "RuaqArabic-Medium",
+        "size": 92
+      },
+      "multi_font": {
+        "arabic_font": "RuaqArabic-Medium",
+        "number_font": "LamaSans-Medium",
+        "template": "يبدأ المزاد يوم {day} {date}",
+        "parts": [
+          {
+            "key": "prefix",
+            "text": "يبدأ المزاد يوم",
+            "font_type": "arabic"
+          },
+          {
+            "key": "day",
+            "text": "",
+            "font_type": "arabic",
+            "user_input": true
+          },
+          {
+            "key": "date",
+            "text": "",
+            "font_type": "number",
+            "user_input": true
+          }
+        ]
       },
       "color": {
         "r": 1,
@@ -45,22 +69,46 @@
     {
       "id": 2,
       "name": "End_day",
-      "label_ar": "يوم النهاية",
-      "label_en": "End Day",
-      "type": "text",
+      "label_ar": "يوم وتاريخ النهاية",
+      "label_en": "End Day & Date",
+      "type": "composite_text",
       "position": {
-        "x": 9567.74,
-        "y": 2942.82
+        "x": 9205.56,
+        "y": 3046.83
       },
       "size": {
-        "width_pt": 453.76,
-        "height_pt": 257.62,
-        "width_cm": 16.0,
-        "height_cm": 9.1
+        "width_pt": 1496.44,
+        "height_pt": 162.78,
+        "width_cm": 52.8,
+        "height_cm": 5.7
       },
       "font": {
-        "family": "RuaqArabic-Bold",
+        "family": "RuaqArabic-Medium",
         "size": 92
+      },
+      "multi_font": {
+        "arabic_font": "RuaqArabic-Medium",
+        "number_font": "LamaSans-Medium",
+        "template": "ينتهي المزاد يوم {day} {date}",
+        "parts": [
+          {
+            "key": "prefix",
+            "text": "ينتهي المزاد يوم",
+            "font_type": "arabic"
+          },
+          {
+            "key": "day",
+            "text": "",
+            "font_type": "arabic",
+            "user_input": true
+          },
+          {
+            "key": "date",
+            "text": "",
+            "font_type": "number",
+            "user_input": true
+          }
+        ]
       },
       "color": {
         "r": 1,
@@ -78,20 +126,44 @@
       "name": "Start_hour",
       "label_ar": "ساعة البداية",
       "label_en": "Start Hour",
-      "type": "text",
+      "type": "composite_text",
       "position": {
-        "x": 10068.30,
-        "y": 3133.83
+        "x": 9227.91,
+        "y": 3265.09
       },
       "size": {
-        "width_pt": 436.70,
-        "height_pt": 234.06,
-        "width_cm": 15.4,
-        "height_cm": 8.3
+        "width_pt": 1451.59,
+        "height_pt": 162.65,
+        "width_cm": 51.2,
+        "height_cm": 5.7
       },
       "font": {
-        "family": "LamaSans-Bold",
+        "family": "LamaSans-Medium",
         "size": 94
+      },
+      "multi_font": {
+        "arabic_font": "RuaqArabic-Medium",
+        "number_font": "LamaSans-Medium",
+        "template": "الساعة {time} {ampm}",
+        "parts": [
+          {
+            "key": "prefix",
+            "text": "الساعة",
+            "font_type": "arabic"
+          },
+          {
+            "key": "time",
+            "text": "",
+            "font_type": "number",
+            "user_input": true
+          },
+          {
+            "key": "ampm",
+            "text": "",
+            "font_type": "arabic",
+            "user_input": true
+          }
+        ]
       },
       "color": {
         "r": 1,
@@ -109,20 +181,44 @@
       "name": "End_hour",
       "label_ar": "ساعة النهاية",
       "label_en": "End Hour",
-      "type": "text",
+      "type": "composite_text",
       "position": {
-        "x": 10012.00,
-        "y": 2792.81
+        "x": 9206.36,
+        "y": 2872.75
       },
       "size": {
-        "width_pt": 505.30,
-        "height_pt": 205.26,
-        "width_cm": 17.8,
-        "height_cm": 7.2
+        "width_pt": 1488.84,
+        "height_pt": 165.24,
+        "width_cm": 52.5,
+        "height_cm": 5.8
       },
       "font": {
-        "family": "LamaSans-Bold",
+        "family": "LamaSans-Medium",
         "size": 94
+      },
+      "multi_font": {
+        "arabic_font": "RuaqArabic-Medium",
+        "number_font": "LamaSans-Medium",
+        "template": "الساعة {time} {ampm}",
+        "parts": [
+          {
+            "key": "prefix",
+            "text": "الساعة",
+            "font_type": "arabic"
+          },
+          {
+            "key": "time",
+            "text": "",
+            "font_type": "number",
+            "user_input": true
+          },
+          {
+            "key": "ampm",
+            "text": "",
+            "font_type": "arabic",
+            "user_input": true
+          }
+        ]
       },
       "color": {
         "r": 1,
@@ -134,132 +230,6 @@
       "location": "top_right",
       "importance": "medium",
       "required": true
-    },
-    {
-      "id": 19,
-      "name": "start_date",
-      "label_ar": "تاريخ البداية",
-      "label_en": "Start Date",
-      "type": "text",
-      "position": {
-        "x": 9188.83,
-        "y": 3323.73
-      },
-      "size": {
-        "width_pt": 500.84,
-        "height_pt": 258.29,
-        "width_cm": 17.7,
-        "height_cm": 9.1
-      },
-      "font": {
-        "family": "LamaSans-Bold",
-        "size": 92
-      },
-      "color": {
-        "r": 1,
-        "g": 1,
-        "b": 1,
-        "name": "white"
-      },
-      "alignment": "center",
-      "location": "top_right",
-      "importance": "medium",
-      "required": true
-    },
-    {
-      "id": 20,
-      "name": "end_date",
-      "label_ar": "تاريخ النهاية",
-      "label_en": "End Date",
-      "type": "text",
-      "position": {
-        "x": 9118.79,
-        "y": 2932.97
-      },
-      "size": {
-        "width_pt": 493.66,
-        "height_pt": 253.71,
-        "width_cm": 17.4,
-        "height_cm": 8.9
-      },
-      "font": {
-        "family": "LamaSans-Bold",
-        "size": 92
-      },
-      "color": {
-        "r": 1,
-        "g": 1,
-        "b": 1,
-        "name": "white"
-      },
-      "alignment": "center",
-      "location": "top_right",
-      "importance": "medium",
-      "required": true
-    },
-    {
-      "id": 21,
-      "name": "PM_AM_start",
-      "label_ar": "ص/م البداية",
-      "label_en": "AM/PM Start",
-      "type": "text",
-      "position": {
-        "x": 10011.10,
-        "y": 3168.46
-      },
-      "size": {
-        "width_pt": 177.50,
-        "height_pt": 171.25,
-        "width_cm": 6.3,
-        "height_cm": 6.0
-      },
-      "font": {
-        "family": "RuaqArabic-Bold",
-        "size": 94
-      },
-      "color": {
-        "r": 1,
-        "g": 1,
-        "b": 1,
-        "name": "white"
-      },
-      "alignment": "center",
-      "location": "top_right",
-      "importance": "medium",
-      "required": true,
-      "notes": "حرف واحد: ص للصباح أو م للمساء"
-    },
-    {
-      "id": 22,
-      "name": "PM_AM_end",
-      "label_ar": "ص/م النهاية",
-      "label_en": "AM/PM End",
-      "type": "text",
-      "position": {
-        "x": 9986.64,
-        "y": 2821.54
-      },
-      "size": {
-        "width_pt": 210.86,
-        "height_pt": 149.64,
-        "width_cm": 7.4,
-        "height_cm": 5.3
-      },
-      "font": {
-        "family": "RuaqArabic-Bold",
-        "size": 94
-      },
-      "color": {
-        "r": 1,
-        "g": 1,
-        "b": 1,
-        "name": "white"
-      },
-      "alignment": "center",
-      "location": "top_right",
-      "importance": "medium",
-      "required": true,
-      "notes": "حرف واحد: ص للصباح أو م للمساء"
     },
     {
       "id": 3,
@@ -697,13 +667,9 @@
       "Type",
       "Auction_name",
       "Start_day",
-      "start_date",
       "Start_hour",
-      "PM_AM_start",
       "End_day",
-      "end_date",
       "End_hour",
-      "PM_AM_end",
       "Area",
       "District",
       "phone",
@@ -722,13 +688,9 @@
     "auction_info": [
       "Auction_name",
       "Start_day",
-      "start_date",
       "Start_hour",
-      "PM_AM_start",
       "End_day",
-      "end_date",
       "End_hour",
-      "PM_AM_end",
       "Provider",
       "License_number"
     ],
@@ -743,46 +705,46 @@
   "fonts_used": [
     {
       "name": "RuaqArabic-Bold",
-      "usage_count": 7,
+      "usage_count": 2,
       "fields": [
-        "Start_day",
-        "End_day",
-        "PM_AM_start",
-        "PM_AM_end",
         "Auction_name",
         "Type"
       ]
     },
     {
       "name": "LamaSans-Bold",
-      "usage_count": 5,
+      "usage_count": 1,
       "fields": [
-        "Start_hour",
-        "End_hour",
-        "start_date",
-        "end_date",
         "phone"
       ]
     },
     {
       "name": "LamaSans-Medium",
-      "usage_count": 5,
+      "usage_count": 9,
       "fields": [
         "License_number",
         "Court_number",
         "Sakk_number",
         "Land_number",
-        "Area"
+        "Area",
+        "Start_day (numbers)",
+        "End_day (numbers)",
+        "Start_hour (numbers)",
+        "End_hour (numbers)"
       ]
     },
     {
       "name": "RuaqArabic-Medium",
-      "usage_count": 4,
+      "usage_count": 8,
       "fields": [
         "Provider",
         "Plan_number",
         "Usage",
-        "District"
+        "District",
+        "Start_day (arabic)",
+        "End_day (arabic)",
+        "Start_hour (arabic)",
+        "End_hour (arabic)"
       ]
     }
   ]
