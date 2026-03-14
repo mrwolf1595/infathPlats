@@ -3,7 +3,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 
 async function inspectPDF() {
-    const pdfPath = path.join('k:', 'infathPlats', 'infathPlats', 'public', 'templates', 'Art_board_2×4.pdf');
+    const pdfPath = path.join('k:', 'infathPlats', 'infathPlats', 'public', 'templates', 'Art_board_3×10.pdf');
     const pdfBytes = fs.readFileSync(pdfPath);
     const pdfDoc = await PDFDocument.load(pdfBytes);
 

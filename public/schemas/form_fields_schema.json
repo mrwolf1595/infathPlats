@@ -514,37 +514,6 @@
       "required": true
     },
     {
-      "id": 12,
-      "name": "Usage",
-      "label_ar": "الاستخدام",
-      "label_en": "Usage",
-      "type": "text",
-      "position": {
-        "x": 7532.84,
-        "y": 92.42
-      },
-      "size": {
-        "width_pt": 1279.53,
-        "height_pt": 384.38,
-        "width_cm": 45.1,
-        "height_cm": 13.6
-      },
-      "font": {
-        "family": "RuaqArabic-Medium",
-        "size": 213
-      },
-      "color": {
-        "r": 0.082,
-        "g": 0.105,
-        "b": 0.266,
-        "name": "dark_blue"
-      },
-      "alignment": "center",
-      "location": "bottom_row",
-      "importance": "medium",
-      "required": false
-    },
-    {
       "id": 13,
       "name": "District",
       "label_ar": "الحي",
@@ -593,7 +562,7 @@
       },
       "font": {
         "family": "LamaSans-Bold",
-        "size": 12
+        "size": 808
       },
       "color": {
         "r": 0.082,
@@ -606,6 +575,36 @@
       "importance": "high",
       "required": true,
       "notes": "أطول حقل - لكن بخط صغير"
+    },
+    {
+      "id": 991,
+      "name": "Start_date",
+      "label_ar": "تاريخ البداية 3x10",
+      "label_en": "Start Date",
+      "type": "text",
+      "position": {"x": 0, "y": 0},
+      "size": {"width_pt": 0, "height_pt": 0, "width_cm": 0, "height_cm": 0},
+      "font": {"family": "LamaSans-Medium", "size": 94},
+      "color": {"r": 1, "g": 1, "b": 1, "name": "white"},
+      "alignment": "center",
+      "location": "top_right",
+      "importance": "medium",
+      "required": false
+    },
+    {
+      "id": 992,
+      "name": "End_date",
+      "label_ar": "تاريخ النهاية 3x10",
+      "label_en": "End Date",
+      "type": "text",
+      "position": {"x": 0, "y": 0},
+      "size": {"width_pt": 0, "height_pt": 0, "width_cm": 0, "height_cm": 0},
+      "font": {"family": "LamaSans-Medium", "size": 94},
+      "color": {"r": 1, "g": 1, "b": 1, "name": "white"},
+      "alignment": "center",
+      "location": "top_right",
+      "importance": "medium",
+      "required": false
     }
   ],
   "image_fields": [
@@ -682,7 +681,6 @@
       "Land_number",
       "Plan_number",
       "Area",
-      "Usage",
       "District"
     ],
     "auction_info": [
@@ -735,11 +733,10 @@
     },
     {
       "name": "RuaqArabic-Medium",
-      "usage_count": 8,
+      "usage_count": 7,
       "fields": [
         "Provider",
         "Plan_number",
-        "Usage",
         "District",
         "Start_day (arabic)",
         "End_day (arabic)",

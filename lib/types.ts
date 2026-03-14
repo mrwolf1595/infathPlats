@@ -10,7 +10,7 @@ export const BOARD_HEIGHT = FIELD_SCHEMA.board_info.dimensions.height_pt; // 566
 export const ALLOWED_FONT_OVERRIDES = ['phone'] as const;
 
 /** Available PDF template files */
-export const TEMPLATE_FILES = ['Art_board_2×4.pdf', 'Art_board_3×6.pdf'] as const;
+export const TEMPLATE_FILES = ['Art_board_2×4.pdf', 'Art_board_3×6.pdf', 'Art_board_3×10.pdf'] as const;
 
 // ─── Inferred Types from Schema ──────────────────────────────────────
 

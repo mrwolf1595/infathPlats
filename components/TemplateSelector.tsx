@@ -8,6 +8,7 @@ interface TemplateSelectorProps {
 const TEMPLATES = [
   { id: 1, label: 'لوحة 2×4', file: 'Art_board_2×4.pdf', size: '4م × 2م' },
   { id: 2, label: 'لوحة 3×6', file: 'Art_board_3×6.pdf', size: '6م × 3م' },
+  { id: 3, label: 'لوحة 3×10', file: 'Art_board_3×10.pdf', size: '10م × 3م' },
 ];
 
 export function TemplateSelector({ value, onChange }: TemplateSelectorProps) {

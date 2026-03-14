@@ -190,6 +190,45 @@ async function loadFonts(pdfDoc: PDFDocument): Promise<FontCache> {
   return cache;
 }
 
+// ─── BiDi text fix for mixed Arabic/number content ──────────────────
+
+/**
+ * Fix BiDi ordering for text that mixes Arabic letters with numbers/slashes.
+ * BUG CONTEXT: `pdf-lib` uses `fontkit` to layout text for appearance streams.
+ * For certain Arabic fonts (like `RuaqArabic-Medium`), `fontkit` treats European 
+ * digits as pure RTL characters. This causes EVERY digit sequence in the string
+ * to be rendered strictly reversed (e.g., "134" becomes "431", "1400" becomes "0014").
+ * 
+ * To perfectly counteract this bug, we parse the string and manually reverse 
+ * ALL digit groups. 
+ * Then when `fontkit` applies its buggy reversal, it flips them right back to normal!
+ */
+function fixBidiText(text: string): string {
+  const hasArabic = /[\u0600-\u06FF]/.test(text);
+  const hasDigits = /\d/.test(text);
+
+  // If no Arabic or no digits, fontkit handles it fine.
+  if (!hasArabic || !hasDigits) return text;
+
+  // Split into alternating digit / non-digit chunks
+  const tokens = text.match(/(\d+|[^\d]+)/g);
+  if (!tokens) return text;
+
+  let result = '';
+
+  for (const token of tokens) {
+    if (/^\d+$/.test(token)) {
+      // Fontkit will reverse any digit string under this font's RTL context.
+      // We pre-reverse it here so it renders normally.
+      result += token.split('').reverse().join('');
+    } else {
+      result += token;
+    }
+  }
+
+  return result;
+}
+
 // ─── Fill PDF Form Fields (regular text only) ────────────────────────
 
 /**
@@ -202,11 +241,12 @@ function fillTextFields(
   formData: Record<string, string | undefined>,
   fontCache: FontCache,
   fieldInfoMap: Map<string, PDFFieldInfo>,
-  fontOverrides?: FontOverride
+  fontOverrides?: FontOverride,
+  templateId?: number
 ): void {
   for (const fieldSpec of FIELD_SCHEMA.text_fields) {
-    // Skip composite fields - they are drawn directly on the page
-    if (COMPOSITE_FIELDS.has(fieldSpec.name)) continue;
+    // Skip composite fields - they are drawn directly on the page, unless templateId is 3
+    if (COMPOSITE_FIELDS.has(fieldSpec.name) && templateId !== 3) continue;
 
     const rawValue = formData[fieldSpec.name as TextFieldName];
     if (!rawValue) continue;
@@ -216,6 +256,11 @@ function fillTextFields(
 
       // Read field info from the template (actual properties)
       const templateInfo = fieldInfoMap.get(fieldSpec.name);
+
+      // The Lama/Ruaq font family reverses ALL digit sequences.
+      // We unconditionally apply fixBidiText to cancel this bug for EVERY text field.
+      // Date formats and flipped Time formats from generator will flow perfectly.
+      const textToSet = fixBidiText(rawValue);
 
       // Determine which font to use by matching font name from template
       let fontFamily = fieldSpec.font.family;
@@ -231,12 +276,22 @@ function fillTextFields(
 
       // Use font size from template, fallback to schema
       let fontSize = templateInfo?.fontSize || fieldSpec.font.size;
+      
+      // Specifically for the phone field in the 2x4 template (Template 1), 
+      // the PDF template embeds a small font size (300).
+      // We force the usage of fontOverrides if provided, OR the fallback schema font size (which is 808)
       if (fieldSpec.name === 'phone') {
-        fontSize = fontOverrides?.phone || fontSize;
+        if (templateId === 1) {
+          fontSize = fontOverrides?.phone || fieldSpec.font.size;
+        } else {
+          fontSize = fontOverrides?.phone || fontSize;
+        }
       }
 
+      // Fix BiDi text ordering for mixed Arabic/number fields
+      // `textToSet` was already computed above (omitting date fields for template 3 if needed)
       textField.setFontSize(fontSize);
-      textField.setText(rawValue);
+      textField.setText(textToSet);
 
       if (font) {
         textField.updateAppearances(font);
@@ -324,8 +379,11 @@ function fillCompositeFields(
   page: PDFPage,
   formData: Record<string, string | undefined>,
   fontCache: FontCache,
-  fieldInfoMap: Map<string, PDFFieldInfo>
+  fieldInfoMap: Map<string, PDFFieldInfo>,
+  templateId?: number
 ): void {
+  if (templateId === 3) return; // Template 3 doesn't use drawn composite fields
+
   for (const fieldSpec of FIELD_SCHEMA.text_fields) {
     if (!COMPOSITE_FIELDS.has(fieldSpec.name)) continue;
 
@@ -502,11 +560,62 @@ export async function generateBoard(
   }));
   console.log('📋 Available PDF form fields:', JSON.stringify(availableFields, null, 2));
 
+  let processedFormData = { ...(formData as Record<string, string | undefined>) };
+
+  if (templateId === 3) {
+    try {
+      const startDay = JSON.parse(processedFormData['Start_day'] || '{}');
+      processedFormData['Start_day'] = startDay.day ? `يبدأ المزاد يوم ${startDay.day}` : '';
+      let sDate = startDay.date || '';
+      if (/^\d{2}\/\d{2}\/\d{4}$/.test(sDate)) {
+        const [d, m, y] = sDate.split('/');
+        sDate = `${y}/${m}/${d}`;
+      }
+      processedFormData['Start_date'] = sDate;
+
+      const startHour = JSON.parse(processedFormData['Start_hour'] || '{}');
+      if (startHour.time) {
+        // Reverse blocks around ':' (e.g., '11:45' -> '45:11') so pdf RTL renders '11:45'
+        const reversedTime = startHour.time.split(':').reverse().join(':');
+        processedFormData['Start_hour'] = `${reversedTime} ${startHour.ampm}`;
+      } else {
+        processedFormData['Start_hour'] = '';
+      }
+
+      const endDay = JSON.parse(processedFormData['End_day'] || '{}');
+      processedFormData['End_day'] = endDay.day ? `ينتهي المزاد يوم ${endDay.day}` : '';
+      let eDate = endDay.date || '';
+      if (/^\d{2}\/\d{2}\/\d{4}$/.test(eDate)) {
+        const [d, m, y] = eDate.split('/');
+        eDate = `${y}/${m}/${d}`; // 'YYYY/MM/DD' is handled natively correctly
+      }
+      processedFormData['End_date'] = eDate;
+
+      const endHour = JSON.parse(processedFormData['End_hour'] || '{}');
+      if (endHour.time) {
+        // Reverse blocks so pdf RTL renders '11:45'
+        const reversedTime = endHour.time.split(':').reverse().join(':');
+        processedFormData['End_hour'] = `${reversedTime} ${endHour.ampm}`;
+      } else {
+        processedFormData['End_hour'] = '';
+      }
+    } catch (e) {
+      console.error('Failed to parse composite fields for template 3', e);
+    }
+  }
+
   // 5. Fill regular text fields using form API
-  fillTextFields(form, formData as Record<string, string | undefined>, fontCache, fieldInfoMap, fontOverrides);
+  fillTextFields(
+    form, 
+    processedFormData, 
+    fontCache, 
+    fieldInfoMap, 
+    fontOverrides,
+    templateId
+  );
 
   // 6. Fill composite (multi-font) text fields by drawing on page
-  fillCompositeFields(page, formData as Record<string, string | undefined>, fontCache, fieldInfoMap);
+  fillCompositeFields(page, processedFormData, fontCache, fieldInfoMap, templateId);
 
   // 7. Fill image fields
   await fillImageFields(pdfDoc, form, images);

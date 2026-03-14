@@ -166,6 +166,12 @@
     box-shadow: 0 0 0 3px var(--input-focus), 0 0 20px rgba(13, 148, 136, 0.1);
   }
 
+  /* Fix for select dropdown options inheriting white text with white browser background */
+  select.input-field option {
+    background-color: var(--nafeth-blue);
+    color: var(--text-primary);
+  }
+
   .input-field.error {
     border-color: var(--error);
     box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15);

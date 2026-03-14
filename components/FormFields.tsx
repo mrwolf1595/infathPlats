@@ -57,7 +57,6 @@ const FIELD_GROUPS = [
     fields: [
       'District',
       'Area',
-      'Usage',
       'Plan_number',
       'Land_number',
       'Sakk_number',
