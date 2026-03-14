@@ -55,8 +55,8 @@ export async function POST(req: NextRequest) {
   } catch (err) {
     console.error('[generate-pdf] Error:', err);
 
-    const message =
-      err instanceof Error ? err.message : 'خطأ غير متوقع في الخادم';
+    // SECURITY FIX [VULN-001]: Do not expose raw internal error messages to the client
+    const message = 'خطأ داخلي في الخادم أثناء توليد الملف';
 
     return NextResponse.json({ error: message }, { status: 500 });
   }

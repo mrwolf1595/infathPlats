@@ -35,8 +35,14 @@ export const fontOverrideSchema = z.object(fontOverrideShape);
 export const imagesSchema = z.object({
   logo: z
     .string({ required_error: 'شعار الشركة مطلوب' })
-    .min(1, 'شعار الشركة مطلوب'),
-  qr: z.string().optional().default(''),
+    .min(1, 'شعار الشركة مطلوب')
+    // SECURITY FIX [VULN-002]: Prevent memory DoS via unbounded base64 input (~10MB limit)
+    .max(14000000, 'حجم الصورة يتجاوز الحد المسموح'),
+  qr: z.string()
+    // SECURITY FIX [VULN-002]: Enforce max length for QR input
+    .max(500000, 'حجم الـ QR يتجاوز الحد المسموح')
+    .optional()
+    .default(''),
 });
 
 /** Full form payload */

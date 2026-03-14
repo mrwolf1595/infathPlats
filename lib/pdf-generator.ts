@@ -564,7 +564,8 @@ export async function generateBoard(
 
   if (templateId === 3) {
     try {
-      const startDay = JSON.parse(processedFormData['Start_day'] || '{}');
+      // SECURITY FIX [VULN-004]: Use || {} so JSON.parse('null') -> null -> fallback to {} to prevent Null Dereference 500 error
+      const startDay = JSON.parse(processedFormData['Start_day'] || '{}') || {};
       processedFormData['Start_day'] = startDay.day ? `يبدأ المزاد يوم ${startDay.day}` : '';
       let sDate = startDay.date || '';
       if (/^\d{2}\/\d{2}\/\d{4}$/.test(sDate)) {
@@ -573,7 +574,7 @@ export async function generateBoard(
       }
       processedFormData['Start_date'] = sDate;
 
-      const startHour = JSON.parse(processedFormData['Start_hour'] || '{}');
+      const startHour = JSON.parse(processedFormData['Start_hour'] || '{}') || {};
       if (startHour.time) {
         // Reverse blocks around ':' (e.g., '11:45' -> '45:11') so pdf RTL renders '11:45'
         const reversedTime = startHour.time.split(':').reverse().join(':');
@@ -582,7 +583,7 @@ export async function generateBoard(
         processedFormData['Start_hour'] = '';
       }
 
-      const endDay = JSON.parse(processedFormData['End_day'] || '{}');
+      const endDay = JSON.parse(processedFormData['End_day'] || '{}') || {};
       processedFormData['End_day'] = endDay.day ? `ينتهي المزاد يوم ${endDay.day}` : '';
       let eDate = endDay.date || '';
       if (/^\d{2}\/\d{2}\/\d{4}$/.test(eDate)) {
@@ -591,7 +592,7 @@ export async function generateBoard(
       }
       processedFormData['End_date'] = eDate;
 
-      const endHour = JSON.parse(processedFormData['End_hour'] || '{}');
+      const endHour = JSON.parse(processedFormData['End_hour'] || '{}') || {};
       if (endHour.time) {
         // Reverse blocks so pdf RTL renders '11:45'
         const reversedTime = endHour.time.split(':').reverse().join(':');
