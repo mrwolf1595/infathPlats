@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import { TemplateSelector } from './TemplateSelector';
 import { FormFields } from './FormFields';
-import { FontSizeOverride } from './FontSizeOverride';
 import { ImageUploader } from './ImageUploader';
 import { FIELD_SCHEMA } from '@/lib/types';
 import { textFieldsSchema, fontOverrideSchema, imagesSchema } from '@/lib/validation';
@@ -110,10 +109,7 @@ export function BoardForm() {
       {/* 2. Text fields (grouped) */}
       <FormFields values={formData} onChange={setFormData} errors={errors} />
 
-      {/* 3. Font overrides */}
-      <FontSizeOverride value={fontOverrides} onChange={setFontOverrides} />
-
-      {/* 4. Image uploads */}
+      {/* 3. Image uploads */}
       <div className="card animate-in animate-in-delay-5">
         <div className="section-title">
           <div className="icon">🖼️</div>

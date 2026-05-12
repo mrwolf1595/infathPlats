@@ -229,6 +229,51 @@ function fixBidiText(text: string): string {
   return result;
 }
 
+/**
+ * Fit text into a single line within a field width by reducing font size,
+ * then trimming with ellipsis if needed.
+ * Used only for the `Type` field to preserve other fields behavior.
+ */
+function fitSingleLineTextForTypeField(
+  text: string,
+  font: PDFFont | undefined,
+  initialFontSize: number,
+  fieldWidth: number
+): { text: string; fontSize: number } {
+  const singleLineText = text.replace(/\r?\n|\r/g, ' ').replace(/\s+/g, ' ').trim();
+  if (!font || !fieldWidth || fieldWidth <= 0 || !singleLineText) {
+    return { text: singleLineText, fontSize: initialFontSize };
+  }
+
+  const padding = fieldWidth * 0.05;
+  const maxWidth = Math.max(fieldWidth - padding * 2, 1);
+  const minFontSize = Math.max(10, Math.floor(initialFontSize * 0.55));
+
+  let fontSize = initialFontSize;
+  let measuredWidth = font.widthOfTextAtSize(singleLineText, fontSize);
+
+  while (measuredWidth > maxWidth && fontSize > minFontSize) {
+    fontSize -= 1;
+    measuredWidth = font.widthOfTextAtSize(singleLineText, fontSize);
+  }
+
+  if (measuredWidth <= maxWidth) {
+    return { text: singleLineText, fontSize };
+  }
+
+  const ellipsis = '...';
+  let trimmed = singleLineText;
+  while (trimmed.length > 0) {
+    const candidate = `${trimmed}${ellipsis}`;
+    if (font.widthOfTextAtSize(candidate, fontSize) <= maxWidth) {
+      return { text: candidate, fontSize };
+    }
+    trimmed = trimmed.slice(0, -1).trimEnd();
+  }
+
+  return { text: ellipsis, fontSize };
+}
+
 // ─── Fill PDF Form Fields (regular text only) ────────────────────────
 
 /**
@@ -288,10 +333,24 @@ function fillTextFields(
         }
       }
 
+      // Apply dynamic single-line fitting ONLY for `Type`.
+      // All other fields keep existing behavior unchanged.
+      let finalTextToSet = textToSet;
+      if (fieldSpec.name === 'Type') {
+        const fitted = fitSingleLineTextForTypeField(
+          textToSet,
+          font,
+          fontSize,
+          templateInfo?.width || fieldSpec.size.width_pt
+        );
+        finalTextToSet = fitted.text;
+        fontSize = fitted.fontSize;
+      }
+
       // Fix BiDi text ordering for mixed Arabic/number fields
-      // `textToSet` was already computed above (omitting date fields for template 3 if needed)
+      // `finalTextToSet` is already prepared above.
       textField.setFontSize(fontSize);
-      textField.setText(textToSet);
+      textField.setText(finalTextToSet);
 
       if (font) {
         textField.updateAppearances(font);

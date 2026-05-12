@@ -10,6 +10,17 @@ interface FormFieldsProps {
   errors?: Record<string, string>;
 }
 
+const FIELD_LABEL_OVERRIDES: Record<string, { ar: string; en: string }> = {
+  Court_number: {
+    ar: 'رقم طلب التنفيذ',
+    en: 'Execution Request Number',
+  },
+  Provider: {
+    ar: 'منصة المزاد',
+    en: 'Auction Platform',
+  },
+};
+
 // Arabic day names
 const DAYS = [
   'السبت',
@@ -91,6 +102,20 @@ function parseCompositeValue(value: string | undefined): Record<string, string> 
 
 export function FormFields({ values, onChange, errors }: FormFieldsProps) {
   const allTextFields = FIELD_SCHEMA.text_fields;
+  const getDisplayLabelAr = (fieldName: string, fallback: string) =>
+    FIELD_LABEL_OVERRIDES[fieldName]?.ar ?? fallback;
+  const getDisplayLabelEn = (fieldName: string, fallback: string) =>
+    FIELD_LABEL_OVERRIDES[fieldName]?.en ?? fallback;
+  const getDisplayError = (fieldName: string, message: string | undefined) => {
+    if (!message) return '';
+    if (fieldName === 'Court_number') {
+      return message.replace('رقم المحكمة', 'رقم طلب التنفيذ');
+    }
+    if (fieldName === 'Provider') {
+      return message.replace('مقدم الخدمة', 'منصة المزاد');
+    }
+    return message;
+  };
 
   /**
    * Update a sub-part of a composite field.
@@ -124,7 +149,7 @@ export function FormFields({ values, onChange, errors }: FormFieldsProps) {
     return (
       <div key={field.name} className="field-group" style={{ gridColumn: 'span 2' }}>
         <label className="label-field">
-          {field.label_ar}
+          {getDisplayLabelAr(field.name, field.label_ar)}
           {field.required && <span className="required-star">*</span>}
         </label>
 
@@ -228,7 +253,7 @@ export function FormFields({ values, onChange, errors }: FormFieldsProps) {
               color: 'var(--error)',
             }}
           >
-            {fieldError}
+            {getDisplayError(field.name, fieldError)}
           </p>
         )}
       </div>
@@ -249,7 +274,7 @@ export function FormFields({ values, onChange, errors }: FormFieldsProps) {
     return (
       <div key={field.name} className="field-group" style={{ gridColumn: 'span 2' }}>
         <label className="label-field">
-          {field.label_ar}
+          {getDisplayLabelAr(field.name, field.label_ar)}
           {field.required && <span className="required-star">*</span>}
         </label>
 
@@ -352,7 +377,7 @@ export function FormFields({ values, onChange, errors }: FormFieldsProps) {
               color: 'var(--error)',
             }}
           >
-            {fieldError}
+            {getDisplayError(field.name, fieldError)}
           </p>
         )}
       </div>
@@ -424,7 +449,7 @@ export function FormFields({ values, onChange, errors }: FormFieldsProps) {
                 return (
                   <div key={field.name} className="field-group">
                     <label className="label-field">
-                      {field.label_ar}
+                      {getDisplayLabelAr(field.name, field.label_ar)}
                       {field.required && (
                         <span className="required-star">*</span>
                       )}
@@ -433,7 +458,7 @@ export function FormFields({ values, onChange, errors }: FormFieldsProps) {
                     <input
                       type="text"
                       name={field.name}
-                      placeholder={field.label_en}
+                      placeholder={getDisplayLabelEn(field.name, field.label_en)}
                       value={fieldValue}
                       onChange={(e) =>
                         onChange({ ...values, [field.name]: e.target.value })
@@ -455,7 +480,7 @@ export function FormFields({ values, onChange, errors }: FormFieldsProps) {
                           color: 'var(--error)',
                         }}
                       >
-                        {fieldError}
+                          {getDisplayError(field.name, fieldError)}
                       </p>
                     )}
                   </div>

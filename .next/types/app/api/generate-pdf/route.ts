@@ -1,4 +1,4 @@
-// File: K:\infathPlats\infathPlats\app\api\generate-pdf\route.ts
+// File: D:\infathPlats\infathPlats\app\api\generate-pdf\route.ts
 import * as entry from '../../../../../app/api/generate-pdf/route.js'
 import type { NextRequest } from 'next/server.js'
 
